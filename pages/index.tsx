@@ -309,7 +309,7 @@ const Home: FC = () => {
         </Container>
       </Box>
 
-      <Container size="xs">
+      <Container size="xs" mb="lg">
         <Text weight="bold" align="center">
           Did you like it?
         </Text>
