@@ -77,7 +77,7 @@ const Home: FC = () => {
       try {
         const response = await fetch(
           process.env.NODE_ENV === 'production'
-            ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/magic`
+            ? 'https://ai-component-generator-delta.vercel.app/api/magic'
             : '/api/magic',
           {
             method: 'POST',
