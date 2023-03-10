@@ -9,7 +9,6 @@ import NextApp, { AppProps, AppContext } from 'next/app';
 import { getCookie, setCookie } from 'cookies-next';
 import { LayoutProvider } from '@/providers';
 import { Analytics } from '@vercel/analytics/react';
-import { Notifications } from '@mantine/notifications';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -39,7 +38,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         <LayoutProvider>
           <Component {...pageProps} />
           <Analytics />
-          <Notifications />
         </LayoutProvider>
       </MantineProvider>
     </ColorSchemeProvider>
