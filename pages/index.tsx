@@ -20,7 +20,7 @@ import { Sandpack } from '@codesandbox/sandpack-react';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
 import Head from 'next/head';
 import { IconBrandTwitter } from '@tabler/icons-react';
-// import { TwitterShareButton } from 'next-share';
+import { TwitterShareButton } from 'next-share';
 import { GradientColorText, TypeWriter } from '@/components';
 import { removeTripleBackticksAndJsx, cleanCode } from '@/utils';
 import { mantineLogo, tailwindLogo } from '@/assets';
@@ -313,18 +313,7 @@ const Home: FC = () => {
         <Text weight="bold" align="center">
           Did you like it?
         </Text>
-        {/* <TwitterShareButton
-          hashtags={[
-            '#microapp',
-            '#ai',
-            '#chatgpt',
-            '#nextjs',
-            '#tailwindcss',
-            '#mantine',
-          ]}
-          title="Check out this AI component generator"
-          url={shareUrl}
-        > */}
+
         <Badge
           sx={{ cursor: 'pointer' }}
           mt={4}
@@ -334,9 +323,21 @@ const Home: FC = () => {
           radius="xl"
           leftSection={twitterIcon}
         >
-          Share it on Twitter
+          <TwitterShareButton
+            hashtags={[
+              'microapp',
+              'ai',
+              'chatgpt',
+              'nextjs',
+              'tailwindcss',
+              'mantine',
+            ]}
+            title="Check out this AI component generator"
+            url={shareUrl}
+          >
+            SHARE IT ON TWITTER
+          </TwitterShareButton>
         </Badge>
-        {/* </TwitterShareButton> */}
       </Container>
     </>
   );
