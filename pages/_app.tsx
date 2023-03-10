@@ -9,6 +9,7 @@ import NextApp, { AppProps, AppContext } from 'next/app';
 import { getCookie, setCookie } from 'cookies-next';
 import { LayoutProvider } from '@/providers';
 import { Analytics } from '@vercel/analytics/react';
+import Script from 'next/script';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -36,6 +37,24 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         theme={{ colorScheme }}
       >
         <LayoutProvider>
+          <Script
+            strategy="afterInteractive"
+            src="https://www.googletagmanager.com/gtag/js?id=G-SY9TGQCG93"
+          />
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-SY9TGQCG93', {
+                  page_path: window.location.pathname,
+                });
+              `,
+            }}
+          />
           <Component {...pageProps} />
           <Analytics />
         </LayoutProvider>
