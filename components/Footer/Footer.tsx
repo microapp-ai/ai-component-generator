@@ -22,7 +22,7 @@ const Footer = () => {
           <Text weight="bold" size="sm" mr="md">
             © 2023 Microapp.ai
           </Text>
-          <a href="https://twitter.com/microappai">
+          <a target="_blank" href="https://twitter.com/microappai">
             <Image
               src={isDark ? twitterIcon : twitterIconDark}
               width={35}
@@ -37,9 +37,21 @@ const Footer = () => {
         </Flex>
 
         <Group spacing={10} className={classes.social} position="right" noWrap>
-          <Text<'a'> weight={400} size="sm" href="#" className={classes.link}>
+          <Text<'a'> size="sm" href="#" className={classes.link}>
             About Us
           </Text>
+          <a
+            href="mailto:contact@microapp.ai?subject=AI Component Generator"
+            style={{ textDecoration: 'none' }}
+          >
+            <Text
+              size="sm"
+              className={classes.link}
+              sx={{ textDecoration: 'none' }}
+            >
+              Contact Us
+            </Text>
+          </a>
         </Group>
       </Container>
     </footer>
