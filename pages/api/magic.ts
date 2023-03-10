@@ -50,8 +50,7 @@ async function handler(req: any, res: any) {
         messages: [
           {
             role: 'system',
-            content:
-              'You are a senior and highly experienced Frontend developer.',
+            content: 'You are a Frontend developer.',
           },
           {
             role: 'user',
