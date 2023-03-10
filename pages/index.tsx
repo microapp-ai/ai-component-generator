@@ -42,7 +42,7 @@ const shareUrl = 'https://www.microapp.ai/ai-component-generator';
 const Home: FC = () => {
   const [opened, { toggle }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [technology, setTechnology] = useState<string>('mantine');
+  const [technology, setTechnology] = useState<string>('tailwind');
   const [data, setData] = useState<string>(mantineCode);
   const [codeWasShown, setCodeWasShown] = useState<boolean>(false);
 
