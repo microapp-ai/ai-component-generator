@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { supabase } from '@/lib/supabaseClient';
 import withCors from '@/cors';
 
 async function handler(req: any, res: any) {
@@ -7,6 +8,10 @@ async function handler(req: any, res: any) {
   if (!text) {
     return res.status(500).json({ response: 'No prompt given' });
   }
+
+  await supabase
+    .from('logs')
+    .insert([{ content: `${technology}-${text}`, type: 'prompt' }]);
 
   const library = technology === 'tailwind' ? 'tailwind css' : '@mantine/core';
   const backticks = '```';
