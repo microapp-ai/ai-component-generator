@@ -14,7 +14,7 @@ const Newsletter: FC = () => {
         radius="sm"
         placeholder="Your email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e: any) => setEmail(e.target.value)}
       />
       <Button color="dark" w={376} radius="sm" mt={16}>
         Subscribe to the newsletter
