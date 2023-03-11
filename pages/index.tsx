@@ -14,12 +14,14 @@ import {
   SegmentedControl,
   Center,
   Transition,
+  CopyButton,
+  Tooltip,
 } from '@mantine/core';
 import Image from 'next/image';
 import { Sandpack } from '@codesandbox/sandpack-react';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
 import Head from 'next/head';
-import { IconBrandTwitter } from '@tabler/icons-react';
+import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import { TwitterShareButton } from 'next-share';
 import { GradientColorText, TypeWriter } from '@/components';
 import { removeTripleBackticksAndJsx, cleanCode } from '@/utils';
@@ -209,7 +211,29 @@ const Home: FC = () => {
           transitionDuration={700}
           transitionTimingFunction="linear"
           in={opened}
+          sx={{
+            position: 'relative',
+          }}
         >
+          <Box sx={{ position: 'absolute', bottom: 5, left: 5, zIndex: 999 }}>
+            <CopyButton value={data} timeout={2000}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Copied' : 'Copy'}
+                  withArrow
+                  position="right"
+                >
+                  <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                    {copied ? (
+                      <IconCheck size="1rem" />
+                    ) : (
+                      <IconCopy size="1rem" />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Box>
           {technology === 'mantine' ? (
             <Sandpack
               key="1"
