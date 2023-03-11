@@ -40,11 +40,11 @@ const lightTextGradient = ['#000', '#3f0d12', '#3a7bd5', '#00d2ff'];
 const shareUrl = 'https://www.microapp.ai/ai-component-generator';
 
 const Home: FC = () => {
-  const [opened, { toggle }] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [technology, setTechnology] = useState<string>('tailwind');
   const [data, setData] = useState<string>(mantineCode);
-  const [codeWasShown, setCodeWasShown] = useState<boolean>(false);
+  const [_, setCodeWasShown] = useState<boolean>(false);
 
   const ref = useRef<any>('');
 
@@ -73,6 +73,8 @@ const Home: FC = () => {
   const generateTextWithGpt = async () => {
     if (ref?.current?.value) {
       setIsLoading(true);
+      setCodeWasShown(false);
+      close();
 
       try {
         const response = await fetch(
@@ -97,11 +99,8 @@ const Home: FC = () => {
           setData(codeWithoutExtraText);
         }
 
-        if (!codeWasShown) {
-          toggle();
-          setCodeWasShown(true);
-        }
-
+        open();
+        setCodeWasShown(true);
         setIsLoading(false);
       } catch (e: any) {
         setIsLoading(false);
