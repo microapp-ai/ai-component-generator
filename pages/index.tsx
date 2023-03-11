@@ -277,6 +277,11 @@ const Home: FC = () => {
               files={{
                 '/App.js': data,
               }}
+              customSetup={{
+                dependencies: {
+                  'date-fns': '2.29.3',
+                },
+              }}
             />
           )}
         </Collapse>

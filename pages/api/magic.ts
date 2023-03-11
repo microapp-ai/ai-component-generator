@@ -67,7 +67,7 @@ async function handler(req: any, res: any) {
           },
           {
             role: 'user',
-            content: `Please create the code that renders the following Next.js functional component, using the ${library} UI library, return code only and DO NOT wrap the code with ${backticks}, ${backticks}jsx, triple backtick, triple backquote or any other string character. Return code only without any instructions or text, avoid using any theme from Mantine. Always return a Next.js functional component. If images are used, please use random images from unsplash using the url https://source.unsplash.com/random.`,
+            content: `Please create the code that renders the following Next.js functional component, using the ${library} UI library, return code only and DO NOT wrap the code with ${backticks}, ${backticks}jsx, triple backtick, triple backquote or any other string character. Return code only without any instructions or text, avoid using any theme from Mantine. Always return a Next.js functional component and do not import any external style css file. If images are used, please use random images from unsplash using the url https://source.unsplash.com/random.`,
           },
           { role: 'user', content: text },
         ],
