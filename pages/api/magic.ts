@@ -55,11 +55,11 @@ async function handler(req: any, res: any) {
         messages: [
           {
             role: 'system',
-            content: 'You are a Frontend developer.',
+            content: 'You are a Frontend developer',
           },
           {
             role: 'user',
-            content: `Create a Next.js functional component + ${library} code for a Button, with dark background color, generate text on it. Please create a complete Next.js component. The functional component should not receive any props. Please return only code.`,
+            content: `Create a Next.js functional component + ${library} code for a Button, with dark background color, generate text on it. Please create a complete Next.js component. The functional component should not receive any props. Please return only code`,
           },
           {
             role: 'assistant',
@@ -67,7 +67,7 @@ async function handler(req: any, res: any) {
           },
           {
             role: 'user',
-            content: `Please create the code that renders the following Next.js functional component, using the ${library} UI library, return code only and DO NOT wrap the code with ${backticks}, ${backticks}jsx, triple backtick, triple backquote or any other string character. Return code only without any instructions or text, avoid using any theme from Mantine. Always return a Next.js functional component and do not import any external style css file. If images are used, please use random images from unsplash using the url https://source.unsplash.com/random.`,
+            content: `Please create the code that renders the following Next.js functional component, using the ${library} UI library, return code only and DO NOT wrap the code with ${backticks}, ${backticks}jsx, triple backtick, triple backquote or any other string character. DO NOT use any external library other than the one that was provided. Return code only without any instructions or text, avoid using any theme from Mantine. Always return a Next.js functional component and do not import any external style css file. If images are used, please use random images from unsplash using the url https://source.unsplash.com/random`,
           },
           { role: 'user', content: text },
         ],
