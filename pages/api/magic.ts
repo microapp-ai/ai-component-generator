@@ -19,9 +19,10 @@ async function handler(req: any, res: any) {
     return res.status(500).json({ response: 'No prompt given' });
   }
 
-  await supabase
+  const { data }: any = await supabase
     .from('logs')
-    .insert([{ content: `${technology}-${text}`, type: 'prompt' }]);
+    .insert([{ technology, prompt: text }])
+    .select();
 
   const library = technology === 'tailwind' ? 'Tailwind CSS' : '@mantine/core';
   const backticks = '```';
@@ -90,9 +91,17 @@ async function handler(req: any, res: any) {
       }
     );
 
+    await supabase
+      .from('logs')
+      .update({
+        generated_code: response.data?.choices[0]?.message?.content,
+        successful: true,
+      })
+      .eq('id', data[0].id);
+
     return res
       .status(200)
-      .json({ response: response.data.choices[0].message.content });
+      .json({ response: response.data?.choices[0]?.message?.content || '' });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
