@@ -4,6 +4,7 @@ import {
   Button,
   Box,
   Text,
+  Title,
   Collapse,
   Autocomplete,
   useMantineColorScheme,
@@ -118,11 +119,11 @@ const Home: FC = () => {
         </title>
         <meta
           name="description"
-          content="Create Next.js + Tailwind CSS/Mantine components using AI."
+          content="Create React + Tailwind CSS/Mantine components using AI."
         />
         <meta
           name="keywords"
-          content="AI, next.js, next, tailwind, mantine, ui, components"
+          content="AI, react, tailwind, mantine, ui, components"
         />
         <meta
           property="og:url"
@@ -135,7 +136,7 @@ const Home: FC = () => {
         />
         <meta
           property="og:description"
-          content="Create Next.js + Tailwind CSS/Mantine components using AI."
+          content="Create React + Tailwind CSS/Mantine components using AI."
         />
         <meta
           property="og:image"
@@ -154,7 +155,7 @@ const Home: FC = () => {
         />
         <meta
           name="twitter:description"
-          content="Create Next.js + Tailwind CSS/Mantine components using AI."
+          content="Create React + Tailwind CSS/Mantine components using AI."
         />
         <meta
           name="twitter:image"
@@ -165,18 +166,13 @@ const Home: FC = () => {
         <GradientColorText
           colors={isDark ? darkTextGradient : lightTextGradient}
         >
-          <TypeWriter
-            texts={[
-              'calendar',
-              'tip calculator',
-              'product card',
-              'password generator',
-            ]}
-          />
+          <Title order={1} align="center" weight="bold" size={60}>
+            AI Component Generator
+          </Title>
         </GradientColorText>
 
         <Text align="center" weight="bold" size={30}>
-          Create Next.js + Tailwind CSS/Mantine components using AI
+          Create React + Tailwind CSS/Mantine components using AI
         </Text>
 
         <Flex w="100%" mt={30} justify="center" align="center" gap="lg">
@@ -257,6 +253,7 @@ const Home: FC = () => {
                   '@mantine/hooks': '5.10.4',
                   '@mantine/next': '5.10.4',
                   '@mantine/dates': '5.10.4',
+                  '@mantine/form': '5.10.4',
                   dayjs: '1.11.7',
                 },
               }}
