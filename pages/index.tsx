@@ -24,9 +24,9 @@ import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
 import Head from 'next/head';
 import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import { TwitterShareButton } from 'next-share';
-import { GradientColorText, TypeWriter } from '@/components';
+import { GradientColorText } from '@/components';
 import { removeTripleBackticksAndJsx, cleanCode } from '@/utils';
-import { mantineLogo, tailwindLogo } from '@/assets';
+import { mantineLogo, reactLogo, tailwindLogo } from '@/assets';
 
 const mantineCode =
   'import { Button } from "@mantine/core"; \n \nconst MyButton = () => <Button>Hello World</Button>;\n \nexport default MyButton;';
@@ -171,9 +171,9 @@ const Home: FC = () => {
           </Title>
         </GradientColorText>
 
-        <Text align="center" weight="bold" size={30}>
-          Create React + Tailwind CSS/Mantine components using AI
-        </Text>
+        <Title order={2} align="center" weight="bold" size={28}>
+          Create React + Tailwind CSS / Mantine components using AI
+        </Title>
 
         <Flex w="100%" mt={30} justify="center" align="center" gap="lg">
           <SegmentedControl

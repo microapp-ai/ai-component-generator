@@ -7,6 +7,7 @@ export { default as logoDark } from './logo-white.svg';
 export { default as logoFull } from './logo-full.svg';
 export { default as logoFullDark } from './logo-full-dark.svg';
 export { default as mantineLogo } from './mantine-logo.svg';
+export { default as reactLogo } from './react-logo.svg';
 export { default as tailwindLogo } from './tailwind-logo.svg';
 export { default as tikTokIcon } from './tiktok.svg';
 export { default as twitterIcon } from './twitter.svg';
