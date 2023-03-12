@@ -95,7 +95,6 @@ async function handler(req: any, res: any) {
       .from('logs')
       .update({
         generated_code: response.data?.choices[0]?.message?.content,
-        successful: true,
       })
       .eq('id', data[0].id);
 
