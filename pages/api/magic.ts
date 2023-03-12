@@ -11,6 +11,7 @@ import {
   TAILWIND_CALENDAR,
   TAILWIND_FORM,
 } from '@/constants';
+import { cleanCode, removeTripleBackticksAndJsx } from '@/utils';
 
 async function handler(req: any, res: any) {
   const { text, technology } = req.body;
@@ -91,16 +92,18 @@ async function handler(req: any, res: any) {
       }
     );
 
+    const code = response.data?.choices[0]?.message?.content || '';
+    const codeWithoutBackticks = removeTripleBackticksAndJsx(code);
+    const codeWithoutExtraText = cleanCode(codeWithoutBackticks);
+
     await supabase
       .from('logs')
       .update({
-        generated_code: response.data?.choices[0]?.message?.content,
+        generated_code: codeWithoutExtraText,
       })
       .eq('id', data[0].id);
 
-    return res
-      .status(200)
-      .json({ response: response.data?.choices[0]?.message?.content || '' });
+    return res.status(200).json({ response: codeWithoutExtraText });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

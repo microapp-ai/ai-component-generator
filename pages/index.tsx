@@ -25,7 +25,6 @@ import Head from 'next/head';
 import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import { TwitterShareButton } from 'next-share';
 import { GradientColorText } from '@/components';
-import { removeTripleBackticksAndJsx, cleanCode } from '@/utils';
 import { mantineLogo, reactLogo, tailwindLogo } from '@/assets';
 
 const mantineCode =
@@ -96,10 +95,7 @@ const Home: FC = () => {
         const { response: generatedText } = await response.json();
 
         if (generatedText !== 'No prompt given') {
-          const codeWithoutBackticks =
-            removeTripleBackticksAndJsx(generatedText);
-          const codeWithoutExtraText = cleanCode(codeWithoutBackticks);
-          setData(codeWithoutExtraText);
+          setData(generatedText);
         }
 
         open();
