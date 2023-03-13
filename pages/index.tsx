@@ -166,8 +166,9 @@ const Home: FC = () => {
         </GradientColorText>
 
         <Title order={2} align="center" weight="bold" size={28}>
-          Create React <Image src={reactLogo} alt="react" /> + Tailwind CSS{' '}
-          <Image src={tailwindLogo} alt="tailwind" /> components using AI
+          Create and preview React <Image src={reactLogo} alt="react" /> +
+          Tailwind CSS <Image src={tailwindLogo} alt="tailwind" /> components
+          using AI
         </Title>
 
         <Collapse
