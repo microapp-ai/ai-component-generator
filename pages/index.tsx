@@ -12,8 +12,6 @@ import {
   Badge,
   ActionIcon,
   Loader,
-  SegmentedControl,
-  Center,
   Transition,
   CopyButton,
   Tooltip,
@@ -25,7 +23,7 @@ import Head from 'next/head';
 import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import { TwitterShareButton } from 'next-share';
 import { GradientColorText } from '@/components';
-import { mantineLogo, reactLogo, tailwindLogo } from '@/assets';
+import { reactLogo, tailwindLogo } from '@/assets';
 
 const mantineCode =
   'import { Button } from "@mantine/core"; \n \nconst MyButton = () => <Button>Hello World</Button>;\n \nexport default MyButton;';
@@ -44,7 +42,7 @@ const shareUrl = 'https://www.microapp.ai/ai-component-generator';
 const Home: FC = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [technology, setTechnology] = useState<string>('tailwind');
+  const [technology] = useState<string>('tailwind');
   const [data, setData] = useState<string>(mantineCode);
   const [_, setCodeWasShown] = useState<boolean>(false);
 
@@ -168,26 +166,9 @@ const Home: FC = () => {
         </GradientColorText>
 
         <Title order={2} align="center" weight="bold" size={28}>
-          Create React + Tailwind CSS components using AI
+          Create React <Image src={reactLogo} alt="react" /> + Tailwind CSS{' '}
+          <Image src={tailwindLogo} alt="tailwind" /> components using AI
         </Title>
-
-        <Flex w="100%" mt={30} justify="center" align="center" gap="lg">
-          <SegmentedControl
-            value={technology}
-            onChange={setTechnology}
-            data={[
-              {
-                label: (
-                  <Center>
-                    <Image src={tailwindLogo} alt="tailwind" height={13} />
-                    <Box ml={5}>Tailwind CSS</Box>
-                  </Center>
-                ),
-                value: 'tailwind',
-              },
-            ]}
-          />
-        </Flex>
 
         <Collapse
           mt="xl"
