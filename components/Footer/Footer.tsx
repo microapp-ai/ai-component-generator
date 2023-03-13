@@ -37,13 +37,14 @@ const Footer = () => {
         </Flex>
 
         <Group spacing={10} className={classes.social} position="right" noWrap>
-          <Text<'a'>
-            size="sm"
+          <a
             href="https://www.microapp.ai/about"
-            className={classes.link}
+            style={{ textDecoration: 'none' }}
           >
-            About Us
-          </Text>
+            <Text size="sm" className={classes.link}>
+              About Us
+            </Text>
+          </a>
           <a
             href="mailto:contact@microapp.ai?subject=AI Component Generator"
             style={{ textDecoration: 'none' }}
