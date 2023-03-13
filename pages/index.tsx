@@ -208,7 +208,7 @@ const Home: FC = () => {
                 showInlineErrors: false,
                 showLineNumbers: false,
                 closableTabs: false,
-                editorHeight: 'calc(100vh - 380px)',
+                editorHeight: 'calc(100vh - 300px)',
               }}
               files={{
                 '/App.js': data,
@@ -237,7 +237,7 @@ const Home: FC = () => {
                 showLineNumbers: false,
                 closableTabs: false,
                 externalResources: ['https://cdn.tailwindcss.com'],
-                editorHeight: 'calc(100vh - 380px)',
+                editorHeight: 'calc(100vh - 250px)',
               }}
               files={{
                 '/App.js': data,
