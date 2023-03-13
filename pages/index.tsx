@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Flex,
   Button,
@@ -24,9 +24,14 @@ import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import { TwitterShareButton } from 'next-share';
 import { GradientColorText } from '@/components';
 import { reactLogo, tailwindLogo } from '@/assets';
+import { supabase } from '@/lib/supabaseClient';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-const mantineCode =
-  'import { Button } from "@mantine/core"; \n \nconst MyButton = () => <Button>Hello World</Button>;\n \nexport default MyButton;';
+interface HomeProps {
+  code: string;
+  prompt: string;
+}
+
 const tailwindCode =
   'const MyButton = () => <button className="m-2 px-3 py-1 bg-blue-400 rounded text-white">Hello World</button>;\n \nexport default MyButton;';
 const darkTextGradient = [
@@ -39,14 +44,17 @@ const darkTextGradient = [
 const lightTextGradient = ['#000', '#3f0d12', '#3a7bd5', '#00d2ff'];
 const shareUrl = 'https://www.microapp.ai/ai-component-generator';
 
-const Home: FC = () => {
+const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  code,
+  prompt,
+}) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [technology] = useState<string>('tailwind');
-  const [data, setData] = useState<string>(mantineCode);
+  const [promptInputValue, setPromptInputValue] = useState('');
+  const [data, setData] = useState<string>(tailwindCode);
+  const [codeId, setCodeId] = useState<string>('');
   const [_, setCodeWasShown] = useState<boolean>(false);
-
-  const ref = useRef<any>('');
 
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
@@ -63,15 +71,15 @@ const Home: FC = () => {
   );
 
   useEffect(() => {
-    if (technology === 'mantine') {
-      setData(mantineCode);
-    } else {
-      setData(tailwindCode);
+    if (code) {
+      setData(code);
+      setPromptInputValue(prompt);
+      open();
     }
-  }, [technology]);
+  }, [code, open, prompt]);
 
   const generateTextWithGpt = async () => {
-    if (ref?.current?.value) {
+    if (promptInputValue) {
       setIsLoading(true);
       setCodeWasShown(false);
       close();
@@ -83,17 +91,22 @@ const Home: FC = () => {
             : '/api/magic',
           {
             method: 'POST',
-            body: JSON.stringify({ text: ref?.current?.value, technology }),
+            body: JSON.stringify({ text: promptInputValue, technology }),
             headers: {
               'Content-Type': 'application/json',
             },
           }
         );
 
-        const { response: generatedText } = await response.json();
+        const {
+          response: generatedText,
+          code_id,
+          prompt,
+        } = await response.json();
 
         if (generatedText !== 'No prompt given') {
           setData(generatedText);
+          setCodeId(code_id);
         }
 
         open();
@@ -184,7 +197,7 @@ const Home: FC = () => {
             <CopyButton value={data} timeout={2000}>
               {({ copied, copy }) => (
                 <Tooltip
-                  label={copied ? 'Copied' : 'Copy'}
+                  label={copied ? 'Code Copied' : 'Copy Code'}
                   withArrow
                   position="right"
                 >
@@ -199,63 +212,34 @@ const Home: FC = () => {
               )}
             </CopyButton>
           </Box>
-          {technology === 'mantine' ? (
-            <Sandpack
-              key="1"
-              template="react"
-              theme={colorScheme}
-              options={{
-                showTabs: false,
-                showInlineErrors: false,
-                showLineNumbers: false,
-                closableTabs: false,
-                editorHeight: 'calc(100vh - 300px)',
-              }}
-              files={{
-                '/App.js': data,
-              }}
-              customSetup={{
-                dependencies: {
-                  '@emotion/react': '^11.10.6',
-                  '@emotion/server': '^11.10.0',
-                  '@mantine/core': '5.10.4',
-                  '@mantine/hooks': '5.10.4',
-                  '@mantine/next': '5.10.4',
-                  '@mantine/dates': '5.10.4',
-                  '@mantine/form': '5.10.4',
-                  dayjs: '1.11.7',
-                },
-              }}
-            />
-          ) : (
-            <Sandpack
-              key="2"
-              template="react"
-              theme={colorScheme}
-              options={{
-                showTabs: false,
-                showInlineErrors: false,
-                showLineNumbers: false,
-                closableTabs: false,
-                externalResources: ['https://cdn.tailwindcss.com'],
-                editorHeight: 'calc(100vh - 250px)',
-              }}
-              files={{
-                '/App.js': data,
-              }}
-              customSetup={{
-                dependencies: {
-                  'date-fns': '2.29.3',
-                },
-              }}
-            />
-          )}
+          <Sandpack
+            key="2"
+            template="react"
+            theme={colorScheme}
+            options={{
+              showTabs: false,
+              showInlineErrors: false,
+              showLineNumbers: false,
+              closableTabs: false,
+              externalResources: ['https://cdn.tailwindcss.com'],
+              editorHeight: 'calc(100vh - 250px)',
+            }}
+            files={{
+              '/App.js': data,
+            }}
+            customSetup={{
+              dependencies: {
+                'date-fns': '2.29.3',
+              },
+            }}
+          />
         </Collapse>
 
         <Container size="sm">
           <Autocomplete
             mt="xl"
-            ref={ref}
+            value={promptInputValue}
+            onChange={setPromptInputValue}
             label="Describe your component here:"
             placeholder="e.g a tip calculator"
             data={[
@@ -303,38 +287,71 @@ const Home: FC = () => {
         </Container>
       </Box>
 
-      <Container size="xs" mb="lg">
-        <Text weight="bold" align="center">
-          Did you like it?
-        </Text>
-
-        <Badge
-          sx={{ cursor: 'pointer' }}
-          mt={4}
-          pl={8}
-          size="lg"
-          color={isDark ? 'yellow' : 'indigo'}
-          radius="xl"
-          leftSection={twitterIcon}
-        >
-          <TwitterShareButton
-            hashtags={[
-              'microapp',
-              'ai',
-              'chatgpt',
-              'react',
-              'nextjs',
-              'tailwindcss',
-            ]}
-            title="Create and preview React components with Tailwind CSS using AI"
-            url={shareUrl}
-          >
-            SHARE IT ON TWITTER
-          </TwitterShareButton>
-        </Badge>
-      </Container>
+      {(codeId || code) && (
+        <Container size="xs" mb="lg">
+          <Flex justify="center" align="center" gap="xs">
+            <Badge
+              sx={{ cursor: 'pointer' }}
+              mt={4}
+              pl={8}
+              size="lg"
+              color={isDark ? 'yellow' : 'indigo'}
+              radius="xl"
+              leftSection={twitterIcon}
+            >
+              <TwitterShareButton
+                hashtags={[
+                  'microapp',
+                  'ai',
+                  'chatgpt',
+                  'react',
+                  'nextjs',
+                  'tailwindcss',
+                ]}
+                title="Checkout this React + Tailwind CSS component created with AI"
+                url={`${shareUrl}?id=${codeId}`}
+              >
+                SHARE YOUR COMPONENT
+              </TwitterShareButton>
+            </Badge>
+            <CopyButton value={`${shareUrl}?id=${codeId}`} timeout={2000}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'URL Copied' : 'Copy URL'}
+                  withArrow
+                  position="right"
+                >
+                  <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                    {copied ? (
+                      <IconCheck size="1rem" />
+                    ) : (
+                      <IconCopy size="1rem" />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Flex>
+        </Container>
+      )}
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
+  query,
+}) => {
+  const { id } = query;
+
+  if (id) {
+    const { data }: any = await supabase.from('logs').select('*').eq('id', id);
+
+    return {
+      props: { code: data[0]?.generated_code, prompt: data[0]?.prompt },
+    };
+  }
+
+  return { props: { code: '', prompt: '' } };
 };
 
 export default Home;

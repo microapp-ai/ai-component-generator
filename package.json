@@ -10,7 +10,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@codesandbox/sandpack-react": "^2.1.2",
+    "@codesandbox/sandpack-react": "2.1.6",
     "@emotion/react": "^11.10.4",
     "@emotion/server": "^11.10.0",
     "@mantine/core": "6.0.0",
