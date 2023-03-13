@@ -322,11 +322,11 @@ const Home: FC = () => {
               'microapp',
               'ai',
               'chatgpt',
+              'react',
               'nextjs',
               'tailwindcss',
-              'mantine',
             ]}
-            title="Check out this AI component generator"
+            title="Create and preview React components with Tailwind CSS using AI"
             url={shareUrl}
           >
             SHARE IT ON TWITTER
