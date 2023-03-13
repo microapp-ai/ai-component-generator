@@ -111,11 +111,11 @@ const Home: FC = () => {
     <>
       <Head>
         <title>
-          Microapp.ai - AI component generator for Tailwind CSS and Mantine
+          Microapp.ai - AI component generator using React + Tailwind CSS
         </title>
         <meta
           name="description"
-          content="Create React + Tailwind CSS/Mantine components using AI."
+          content="Create React + Tailwind CSS components using AI."
         />
         <meta
           name="keywords"
@@ -128,11 +128,11 @@ const Home: FC = () => {
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content="Microapp.ai - AI component generator for Tailwind CSS and Mantine"
+          content="Microapp.ai - AI component generator using React + Tailwind CSS"
         />
         <meta
           property="og:description"
-          content="Create React + Tailwind CSS/Mantine components using AI."
+          content="Create and Preview React + Tailwind CSS components using AI."
         />
         <meta
           property="og:image"
@@ -147,11 +147,11 @@ const Home: FC = () => {
         />
         <meta
           name="twitter:title"
-          content="Microapp.ai - AI component generator for Tailwind CSS and Mantine"
+          content="Microapp.ai - AI component generator using React + Tailwind CSS"
         />
         <meta
           name="twitter:description"
-          content="Create React + Tailwind CSS/Mantine components using AI."
+          content="Create and Preview React + Tailwind CSS components using AI."
         />
         <meta
           name="twitter:image"
@@ -168,7 +168,7 @@ const Home: FC = () => {
         </GradientColorText>
 
         <Title order={2} align="center" weight="bold" size={28}>
-          Create React + Tailwind CSS / Mantine components using AI
+          Create React + Tailwind CSS components using AI
         </Title>
 
         <Flex w="100%" mt={30} justify="center" align="center" gap="lg">
@@ -184,15 +184,6 @@ const Home: FC = () => {
                   </Center>
                 ),
                 value: 'tailwind',
-              },
-              {
-                label: (
-                  <Center>
-                    <Image src={mantineLogo} alt="mantine" height={13} />
-                    <Box ml={5}>Mantine</Box>
-                  </Center>
-                ),
-                value: 'mantine',
               },
             ]}
           />
