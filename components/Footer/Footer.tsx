@@ -39,7 +39,7 @@ const Footer = () => {
         <Group spacing={10} className={classes.social} position="right" noWrap>
           <Text<'a'>
             size="sm"
-            href="https://www.microapp.ai/ai-component-generator"
+            href="https://www.microapp.ai/about"
             className={classes.link}
           >
             About Us
