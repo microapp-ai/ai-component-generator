@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import Head from 'next/head';
 import {
   Flex,
   Button,
@@ -15,21 +16,23 @@ import {
   Transition,
   CopyButton,
   Tooltip,
+  SegmentedControl,
+  Center,
 } from '@mantine/core';
 import Image from 'next/image';
 import { Sandpack } from '@codesandbox/sandpack-react';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
-import Head from 'next/head';
 import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import { TwitterShareButton } from 'next-share';
 import { GradientColorText } from '@/components';
-import { reactLogo, tailwindLogo } from '@/assets';
+import { reactLogo, svelteLogo, tailwindLogo, vueLogo } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 interface HomeProps {
   code: string;
   prompt: string;
+  frontend: any;
 }
 
 const darkTextGradient = [
@@ -45,14 +48,14 @@ const shareUrl = 'https://www.microapp.ai/ai-component-generator';
 const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   code,
   prompt,
+  frontend,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [technology] = useState<string>('tailwind');
-  const [promptInputValue, setPromptInputValue] = useState('');
-  const [data, setData] = useState<string>(
-    'const MyComponent = () => <div />;'
-  );
+  const [frontendTech, setFrontendTech] = useState<any>(frontend || 'react');
+  const [promptInputValue, setPromptInputValue] = useState<string>('');
+  const [frontendLogo, setFrontendLogo] = useState<any>(reactLogo);
+  const [data, setData] = useState<string>('');
   const [codeId, setCodeId] = useState<string>('');
   const [_, setCodeWasShown] = useState<boolean>(false);
 
@@ -74,9 +77,24 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
     if (code) {
       setData(code);
       setPromptInputValue(prompt);
+      setFrontendTech(frontend);
       open();
     }
-  }, [code, open, prompt]);
+  }, [code, frontend, open, prompt]);
+
+  useEffect(() => {
+    switch (frontendTech) {
+      case 'svelte':
+        setFrontendLogo(svelteLogo);
+        break;
+      case 'vue':
+        setFrontendLogo(vueLogo);
+        break;
+      default:
+        setFrontendLogo(reactLogo);
+        break;
+    }
+  }, [frontendTech]);
 
   const generateTextWithGpt = async () => {
     if (promptInputValue) {
@@ -91,7 +109,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             : '/api/magic',
           {
             method: 'POST',
-            body: JSON.stringify({ text: promptInputValue, technology }),
+            body: JSON.stringify({
+              text: promptInputValue,
+              ui: 'tailwind',
+              frontend: frontendTech,
+            }),
             headers: {
               'Content-Type': 'application/json',
             },
@@ -175,10 +197,49 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         </GradientColorText>
 
         <Title order={2} align="center" weight="bold" size={28}>
-          Create and preview React <Image src={reactLogo} alt="react" /> +
-          Tailwind CSS <Image src={tailwindLogo} alt="tailwind" /> components
-          using AI
+          Create and preview{' '}
+          {frontendTech.replace(/^\w/, (c: any) => c.toUpperCase())}{' '}
+          <Image src={frontendLogo} alt={frontendTech} height={25} /> + Tailwind
+          CSS <Image src={tailwindLogo} alt="tailwind" /> components using AI
         </Title>
+
+        <Flex justify="center" align="center" mt="xl">
+          <SegmentedControl
+            value={frontendTech}
+            onChange={setFrontendTech}
+            data={[
+              {
+                value: 'react',
+                label: (
+                  <Center>
+                    <Image src={reactLogo} alt="react" height={16} />
+                    <Box ml={6}>React</Box>
+                  </Center>
+                ),
+              },
+              {
+                value: 'svelte',
+                label: (
+                  <Center>
+                    <Image src={svelteLogo} alt="svelte" height={16} />
+                    <Box ml={6}>Svelte</Box>
+                  </Center>
+                ),
+              },
+              {
+                value: 'vue',
+                label: (
+                  <Center>
+                    <Image src={vueLogo} alt="vue" height={16} />
+                    <Box ml={6}>Vue</Box>
+                  </Center>
+                ),
+              },
+            ]}
+          />
+        </Flex>
+
+        <Text>{data}</Text>
 
         <Collapse
           mt="xl"
@@ -208,27 +269,81 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
               )}
             </CopyButton>
           </Box>
-          <Sandpack
-            key="2"
-            template="react"
-            theme={colorScheme}
-            options={{
-              showTabs: false,
-              showInlineErrors: false,
-              showLineNumbers: false,
-              closableTabs: false,
-              externalResources: ['https://cdn.tailwindcss.com'],
-              editorHeight: 'calc(100vh - 250px)',
-            }}
-            files={{
-              '/App.js': data,
-            }}
-            customSetup={{
-              dependencies: {
-                'date-fns': '2.29.3',
-              },
-            }}
-          />
+          {frontendTech === 'react' && (
+            <Sandpack
+              key="1"
+              template="react"
+              theme={colorScheme}
+              options={{
+                showTabs: false,
+                showInlineErrors: false,
+                showLineNumbers: false,
+                closableTabs: false,
+                externalResources: ['https://cdn.tailwindcss.com'],
+                editorHeight: 'calc(100vh - 250px)',
+              }}
+              files={{
+                '/App.js': data,
+              }}
+              customSetup={{
+                dependencies: {
+                  'date-fns': '2.29.3',
+                  'react-chartjs-2': '5.2.0',
+                  'chart.js': '4.2.1',
+                },
+              }}
+            />
+          )}
+          {frontendTech === 'svelte' && (
+            <Sandpack
+              key="2"
+              template="svelte"
+              theme={colorScheme}
+              options={{
+                showTabs: false,
+                showInlineErrors: false,
+                showLineNumbers: false,
+                closableTabs: false,
+                externalResources: ['https://cdn.tailwindcss.com'],
+                editorHeight: 'calc(100vh - 250px)',
+              }}
+              files={{
+                '/MyComponent.svelte': data,
+              }}
+              customSetup={{
+                dependencies: {
+                  'date-fns': '2.29.3',
+                  'react-chartjs-2': '5.2.0',
+                  'chart.js': '4.2.1',
+                },
+              }}
+            />
+          )}
+          {frontendTech === 'vue' && (
+            <Sandpack
+              key="3"
+              template="vue"
+              theme={colorScheme}
+              options={{
+                showTabs: false,
+                showInlineErrors: false,
+                showLineNumbers: false,
+                closableTabs: false,
+                externalResources: ['https://cdn.tailwindcss.com'],
+                editorHeight: 'calc(100vh - 250px)',
+              }}
+              files={{
+                '/MyComponent.vue': data,
+              }}
+              customSetup={{
+                dependencies: {
+                  'date-fns': '2.29.3',
+                  'react-chartjs-2': '5.2.0',
+                  'chart.js': '4.2.1',
+                },
+              }}
+            />
+          )}
         </Collapse>
 
         <Container size="sm">
@@ -350,11 +465,15 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
     const { data }: any = await supabase.from('logs').select('*').eq('id', id);
 
     return {
-      props: { code: data[0]?.generated_code, prompt: data[0]?.prompt },
+      props: {
+        code: data[0]?.generated_code,
+        prompt: data[0]?.prompt,
+        frontend: data[0]?.frontend,
+      },
     };
   }
 
-  return { props: { code: '', prompt: '' } };
+  return { props: { code: '', prompt: '', frontend: '' } };
 };
 
 export default Home;

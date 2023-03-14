@@ -2,19 +2,15 @@ import axios from 'axios';
 import { supabase } from '@/lib/supabaseClient';
 import withCors from '@/cors';
 import {
-  MANTINE_BUTTON,
-  MANTINE_BUTTON_STYLED,
-  MANTINE_CALENDAR,
-  MANTINE_FORM,
-  TAILWIND_BUTTON,
-  TAILWIND_BUTTON_STYLED,
-  TAILWIND_CALENDAR,
-  TAILWIND_FORM,
-} from '@/constants';
-import { cleanCode, removeTripleBackticksAndJsx } from '@/utils';
+  cleanCode,
+  Component,
+  ComponentType,
+  getCode,
+  removeTripleBackticksAndJsx,
+} from '@/utils';
 
 async function handler(req: any, res: any) {
-  const { text, technology } = req.body;
+  const { text, frontend, ui } = req.body;
 
   if (!text) {
     return res.status(500).json({ response: 'No prompt given' });
@@ -22,11 +18,24 @@ async function handler(req: any, res: any) {
 
   const { data }: any = await supabase
     .from('logs')
-    .insert([{ technology, prompt: text }])
+    .insert([{ technology: frontend, ui: ui, prompt: text }])
     .select();
 
-  const library = technology === 'tailwind' ? 'Tailwind CSS' : '@mantine/core';
+  const uiLibrary = 'Tailwind CSS';
   const backticks = '```';
+  let frontendTech;
+
+  switch (frontend) {
+    case 'svelte':
+      frontendTech = Component.SVELTE;
+      break;
+    case 'vue':
+      frontendTech = Component.VUE;
+      break;
+    default:
+      frontendTech = Component.REACT;
+      break;
+  }
 
   const messages = [
     {
@@ -36,42 +45,39 @@ async function handler(req: any, res: any) {
     },
     {
       role: 'user',
-      content: `Create a React functional component + ${library} code for a Button, generate text on it. The functional component should not receive any props.`,
+      content: `Create a ${frontend} component + ${uiLibrary} code for a Button, generate text on it. The functional component should not receive any props.`,
     },
     {
       role: 'assistant',
-      content: technology === 'tailwind' ? TAILWIND_BUTTON : MANTINE_BUTTON,
+      content: getCode(frontendTech, ComponentType.BUTTON),
     },
     {
       role: 'user',
-      content: `Create a React functional component + ${library} code for a Button with indigo background, generate text on it. The functional component should not receive any props.`,
+      content: `Create a ${frontend} component + ${uiLibrary} code for a Button with indigo background, generate text on it. The functional component should not receive any props.`,
     },
     {
       role: 'assistant',
-      content:
-        technology === 'tailwind'
-          ? TAILWIND_BUTTON_STYLED
-          : MANTINE_BUTTON_STYLED,
+      content: getCode(frontendTech, ComponentType.BUTTON_STYLED),
     },
     {
       role: 'user',
-      content: `Create a React functional component + ${library} code for a form, make it beautiful. The functional component should not receive any props.`,
+      content: `Create a ${frontend} component + ${uiLibrary} code for a form, make it beautiful. The functional component should not receive any props.`,
     },
     {
       role: 'assistant',
-      content: technology === 'tailwind' ? TAILWIND_FORM : MANTINE_FORM,
+      content: getCode(frontendTech, ComponentType.FORM),
     },
     {
       role: 'user',
-      content: `Create a React functional component + ${library} code for a calendar, make it beautiful. The functional component should not receive any props.`,
+      content: `Create a ${frontend} component + ${uiLibrary} code for a calendar, make it beautiful. The functional component should not receive any props.`,
     },
     {
       role: 'assistant',
-      content: technology === 'tailwind' ? TAILWIND_CALENDAR : MANTINE_CALENDAR,
+      content: getCode(frontendTech, ComponentType.CALENDAR),
     },
     {
       role: 'user',
-      content: `Please create the code that renders the following React functional component, using the ${library} UI library, return code only and DO NOT wrap the code with ${backticks}, ${backticks}jsx, triple backtick, triple backquote or any other string character. DO NOT use any external library other than the one that was provided. Return code only without any instructions or text, avoid using any theme from Mantine. Always return a React functional component and do not import any external style css file`,
+      content: `Please create the code that renders the following ${frontend} component, using the ${uiLibrary} UI library, return code only and DO NOT wrap the code with ${backticks}, ${backticks}jsx, triple backtick, triple backquote or any other string character. DO NOT use any external library other than the one that was provided. Return code only without any instructions or text, avoid using any theme from Mantine. Always return a ${frontend} component and do not import any external style css file`,
     },
     { role: 'user', content: text },
   ];
@@ -94,7 +100,7 @@ async function handler(req: any, res: any) {
 
     const code = response.data?.choices[0]?.message?.content || '';
     const codeWithoutBackticks = removeTripleBackticksAndJsx(code);
-    const codeWithoutExtraText = cleanCode(codeWithoutBackticks);
+    const codeWithoutExtraText = cleanCode(codeWithoutBackticks, frontend);
 
     await supabase
       .from('logs')

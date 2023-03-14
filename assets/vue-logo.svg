@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="29px" viewBox="0 0 33 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Vue.js_Logo_2</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Vue.js_Logo_2" fill-rule="nonzero">
+            <g id="Group" transform="translate(16.500000, 14.500000) scale(-1, 1) rotate(-180.000000) translate(-16.500000, -14.500000) ">
+                <g transform="translate(0.000000, 0.000000)" fill="#41B883" id="Path">
+                    <polygon points="20.3104982 29 16.5 22.3028114 12.6895018 29 0 29 16.5 0 33 29"></polygon>
+                </g>
+                <g transform="translate(6.600000, 11.600341)" fill="#34495E" id="Path">
+                    <polygon points="13.7104982 17.3996589 9.9 10.7024703 6.08950183 17.3996589 0 17.3996589 9.9 0 19.8 17.3996589"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
