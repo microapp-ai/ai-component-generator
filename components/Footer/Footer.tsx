@@ -22,14 +22,6 @@ const Footer = () => {
           <Text weight="bold" size="sm" mr="md">
             © 2023 Microapp.ai
           </Text>
-          <a target="_blank" href="https://twitter.com/microappai">
-            <Image
-              src={isDark ? twitterIcon : twitterIconDark}
-              width={35}
-              height={35}
-              alt="twitter"
-            />
-          </a>
         </Flex>
 
         <Flex className={classes.gridItem} align="center" justify="center">
@@ -56,6 +48,14 @@ const Footer = () => {
             >
               Contact Us
             </Text>
+          </a>
+          <a target="_blank" href="https://twitter.com/microappai">
+            <Image
+              src={isDark ? twitterIcon : twitterIconDark}
+              width={35}
+              height={35}
+              alt="twitter"
+            />
           </a>
         </Group>
       </Container>
