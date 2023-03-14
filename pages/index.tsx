@@ -296,7 +296,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           <Flex justify="center" align="center" gap="xs">
             <Badge
               sx={{ cursor: 'pointer' }}
-              mt={4}
               pl={8}
               size="lg"
               color={isDark ? 'yellow' : 'indigo'}
