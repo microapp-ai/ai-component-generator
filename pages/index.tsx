@@ -32,8 +32,6 @@ interface HomeProps {
   prompt: string;
 }
 
-const tailwindCode =
-  'const MyButton = () => <button className="m-2 px-3 py-1 bg-blue-400 rounded text-white">Hello World</button>;\n \nexport default MyButton;';
 const darkTextGradient = [
   '#F08080',
   '#FFA07A',
@@ -52,7 +50,9 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [technology] = useState<string>('tailwind');
   const [promptInputValue, setPromptInputValue] = useState('');
-  const [data, setData] = useState<string>(tailwindCode);
+  const [data, setData] = useState<string>(
+    'const MyComponent = () => <div />;'
+  );
   const [codeId, setCodeId] = useState<string>('');
   const [_, setCodeWasShown] = useState<boolean>(false);
 
@@ -98,18 +98,14 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           }
         );
 
-        const {
-          response: generatedText,
-          code_id,
-          prompt,
-        } = await response.json();
+        const { response: generatedText, code_id } = await response.json();
 
         if (generatedText !== 'No prompt given') {
           setData(generatedText);
           setCodeId(code_id);
         }
 
-        open();
+        setTimeout(() => open(), 300);
         setCodeWasShown(true);
         setIsLoading(false);
       } catch (e: any) {
@@ -238,11 +234,18 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         <Container size="sm">
           <Autocomplete
             mt="xl"
+            size="md"
+            withinPortal
             value={promptInputValue}
             onChange={setPromptInputValue}
             label="Describe your component here:"
             placeholder="e.g a tip calculator"
             data={[
+              {
+                value:
+                  'a white board to draw with the mouse, a color picker and a reset button',
+                group: 'Most used',
+              },
               { value: 'a mortgage calculator', group: 'Most used' },
               { value: 'a tip calculator', group: 'Most used' },
               { value: 'a password generator', group: 'Most used' },
@@ -259,6 +262,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             disabled={isLoading}
             fullWidth
             size="lg"
+            aria-label="generate component"
           >
             Make magic 🪄
           </Button>

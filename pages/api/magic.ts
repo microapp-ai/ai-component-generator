@@ -103,13 +103,10 @@ async function handler(req: any, res: any) {
       })
       .eq('id', data[0].id);
 
-    return res
-      .status(200)
-      .json({
-        response: codeWithoutExtraText,
-        code_id: data[0].id,
-        prompt: data[0].prompt,
-      });
+    return res.status(200).json({
+      response: codeWithoutExtraText,
+      code_id: data[0].id,
+    });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
