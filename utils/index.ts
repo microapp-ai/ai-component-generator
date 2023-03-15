@@ -34,7 +34,7 @@ export const cleanCode = (code: string, technology: string): string => {
   switch (technology) {
     case 'svelte':
       codeStartMarker = '<script>';
-      codeEndMarker = '>';
+      codeEndMarker = '</div>';
       break;
     case 'vue':
       codeStartMarker = '<template>';
