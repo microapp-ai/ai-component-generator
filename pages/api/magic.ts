@@ -100,7 +100,7 @@ async function handler(req: any, res: any) {
 
     const code = response.data?.choices[0]?.message?.content || '';
     const codeWithoutBackticks = removeTripleBackticksAndJsx(code);
-    const codeWithoutExtraText = cleanCode(codeWithoutBackticks, frontend);
+    const codeWithoutExtraText = cleanCode(codeWithoutBackticks);
 
     await supabase
       .from('logs')

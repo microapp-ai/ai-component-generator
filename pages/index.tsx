@@ -28,6 +28,11 @@ import { GradientColorText } from '@/components';
 import { reactLogo, svelteLogo, tailwindLogo, vueLogo } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import {
+  REACT_BUTTON_STYLED,
+  SVELTE_BUTTON_STYLED,
+  VUE_BUTTON_STYLED,
+} from '@/constants';
 
 interface HomeProps {
   code: string;
@@ -86,12 +91,15 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
     switch (frontendTech) {
       case 'svelte':
         setFrontendLogo(svelteLogo);
+        setData(SVELTE_BUTTON_STYLED);
         break;
       case 'vue':
         setFrontendLogo(vueLogo);
+        setData(VUE_BUTTON_STYLED);
         break;
       default:
         setFrontendLogo(reactLogo);
+        setData(REACT_BUTTON_STYLED);
         break;
     }
   }, [frontendTech]);
@@ -134,6 +142,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         setIsLoading(false);
       }
     }
+  };
+
+  const handleTechnologyChange = (value: string) => {
+    close();
+    setFrontendTech(value);
   };
 
   return (
@@ -206,7 +219,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         <Flex justify="center" align="center" mt="xl">
           <SegmentedControl
             value={frontendTech}
-            onChange={setFrontendTech}
+            onChange={(value: string) => handleTechnologyChange(value)}
             data={[
               {
                 value: 'react',
@@ -238,8 +251,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             ]}
           />
         </Flex>
-
-        <Text>{data}</Text>
 
         <Collapse
           mt="xl"
@@ -308,7 +319,15 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 editorHeight: 'calc(100vh - 250px)',
               }}
               files={{
-                '/MyComponent.svelte': data,
+                '/index.js': `
+                import App from "./App.svelte";
+
+                const app = new App({
+                  target: document.body
+                });
+
+                export default app; `,
+                '/App.svelte': data,
               }}
               customSetup={{
                 dependencies: {
@@ -333,7 +352,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 editorHeight: 'calc(100vh - 250px)',
               }}
               files={{
-                '/MyComponent.vue': data,
+                'src/App.vue': data,
               }}
               customSetup={{
                 dependencies: {

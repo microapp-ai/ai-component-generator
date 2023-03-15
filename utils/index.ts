@@ -27,58 +27,27 @@ export const removeTripleBackticksAndJsx = (input: string): string => {
   return output;
 };
 
-export const cleanCode = (code: string, technology: string): string => {
-  let codeStartMarker;
-  let codeEndMarker;
+export const cleanCode = (snippet: string): string => {
+  const reactRegEx =
+    /import\sReact(?:[^;\n]*?)[;\n][\s\S]*?export\sdefault[\s\S]*?;/;
+  const svelteRegEx =
+    /<script>[\s\S]*?<\/script>[\s\S]*?(?:<style>[\s\S]*?<\/style>)?[\s\S]*?(?=<div)(?:[^>]*>)(?:[\s\S]*?(?:<\/div>))+/g;
+  const vueRegEx =
+    /<template>[\s\S]*?<\/template>[\s\S]*?<script>[\s\S]*?<\/script>[\s\S]*?<style>[\s\S]*?<\/style>/;
 
-  switch (technology) {
-    case 'svelte':
-      codeStartMarker = '<script>';
-      codeEndMarker = '</div>';
-      break;
-    case 'vue':
-      codeStartMarker = '<template>';
-      codeEndMarker = '</script>';
-      break;
-    default:
-      codeStartMarker = 'import';
-      codeEndMarker = 'export default';
-      break;
+  let cleanedSnippet = '';
+
+  if (snippet.match(reactRegEx)) {
+    cleanedSnippet = snippet.match(reactRegEx)![0];
+  } else if (snippet.match(svelteRegEx)) {
+    cleanedSnippet = snippet.match(svelteRegEx)![0];
+  } else if (snippet.match(vueRegEx)) {
+    cleanedSnippet = snippet.match(vueRegEx)![0];
+  } else {
+    throw new Error('Unsupported or invalid code snippet');
   }
 
-  if (technology === 'vue' || 'svelte') {
-    const startIndex = code.indexOf(codeStartMarker);
-    const endIndex = code.indexOf(codeEndMarker) + codeEndMarker.length;
-
-    if (startIndex === -1 || endIndex === -1) {
-      return '';
-    }
-
-    return code.slice(startIndex, endIndex);
-  }
-
-  const lines = code.split('\n');
-
-  // Find the index of the line that contains the given string
-  let startIndex = 0;
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].startsWith(codeStartMarker)) {
-      startIndex = i;
-      break;
-    }
-  }
-
-  // Find the index of the line that contains the given string
-  let endIndex = 0;
-  for (let i = lines.length - 1; i >= 0; i--) {
-    if (lines[i].startsWith(codeEndMarker)) {
-      endIndex = i;
-      break;
-    }
-  }
-
-  // Join the lines from the start index to the end index (inclusive)
-  return lines.slice(startIndex, endIndex + 1).join('\n');
+  return cleanedSnippet;
 };
 
 export enum Component {

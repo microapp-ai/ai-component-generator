@@ -168,8 +168,8 @@ export const SVELTE_BUTTON_STYLED = `
     /* Define the component styles using Tailwind CSS classes */
     /* No additional styles are needed */
   </style>
-  <div className="flex flex-col items-center justify-center h-screen">
-    <button className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50">Click Me!</button>
+  <div class="flex flex-col items-center justify-center h-screen">
+    <button class="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50">Click Me!</button>
   </div>
 `;
 
