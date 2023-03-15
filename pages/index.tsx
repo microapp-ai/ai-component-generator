@@ -135,7 +135,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           setCodeId(code_id);
         }
 
-        setTimeout(() => open(), 300);
+        setTimeout(() => open(), 500);
         setCodeWasShown(true);
         setIsLoading(false);
       } catch (e: any) {
