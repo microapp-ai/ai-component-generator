@@ -106,7 +106,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           setCodeId(code_id);
         }
 
-        setTimeout(() => open(), 300);
+        setTimeout(() => open(), 500);
         setCodeWasShown(true);
         setIsLoading(false);
       } catch (e: any) {
@@ -166,29 +166,55 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           content="https://ai-component-generator-delta.vercel.app/og.png"
         />
       </Head>
-      <Box component="main" pb={40} mt={50} w="100%" h="100%">
-        <Title order={1} align="center" weight="bold" size={42}>
-          AI-Powered Component Generator
-        </Title>
-
-        <Title
-          mt={20}
-          order={2}
-          align="center"
-          weight={400}
-          size={26}
-          color="#6F7175"
+      <Box component="main" w="100%" h="100%">
+        <Transition
+          mounted={!opened}
+          transition="fade"
+          duration={400}
+          timingFunction="ease"
         >
-          Create and preview{' '}
-          <Text span color="#202123" weight={600}>
-            React
-          </Text>{' '}
-          <Image src={reactLogo} alt="react" /> +
-          <Text span color="#202123" weight={600}>
-            Tailwind CSS
-          </Text>{' '}
-          <Image src={tailwindLogo} alt="tailwind" /> components using AI
-        </Title>
+          {(style) => (
+            <Box style={style} mt={50}>
+              <Title order={1} align="center" weight="bold" size={42}>
+                AI-Powered Component Generator
+              </Title>
+              <Title
+                mt={20}
+                order={2}
+                align="center"
+                weight={400}
+                size={26}
+                color="#6F7175"
+              >
+                Create and preview{' '}
+                <Text span color="#202123" weight={600}>
+                  React
+                </Text>{' '}
+                <Image src={reactLogo} alt="react" /> +
+                <Text span color="#202123" weight={600}>
+                  Tailwind CSS
+                </Text>{' '}
+                <Image src={tailwindLogo} alt="tailwind" /> components using AI
+              </Title>
+            </Box>
+          )}
+        </Transition>
+
+        <Transition
+          mounted={isLoading}
+          transition="fade"
+          duration={400}
+          timingFunction="ease"
+        >
+          {(style) => (
+            <Flex style={style} mt="xl" justify="center" align="center">
+              <Loader size="xs" mr={4} color={isDark ? 'yellow' : 'indigo'} />
+              <Text weight="bold">
+                Please hang on while the AI is doing some magic 🎩🪄...
+              </Text>
+            </Flex>
+          )}
+        </Transition>
 
         <Collapse
           mt="xl"
@@ -338,27 +364,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
               </Box>
             )}
           </Transition>
-
-          <Transition
-            mounted={isLoading}
-            transition="fade"
-            duration={400}
-            timingFunction="ease"
-          >
-            {(style) => (
-              <Flex style={style} mt="lg" justify="center" align="center">
-                <Loader size="xs" mr={4} color={isDark ? 'yellow' : 'indigo'} />
-                <Text weight="bold">
-                  Please hang on while the AI is doing some magic 🎩🪄...
-                </Text>
-              </Flex>
-            )}
-          </Transition>
         </Container>
       </Box>
 
       {(codeId || code) && (
-        <Container size="xs" mb="lg">
+        <Container size="xs" mb={40}>
           <Flex justify="center" align="center" gap="xs">
             <Badge
               sx={{ cursor: 'pointer' }}
