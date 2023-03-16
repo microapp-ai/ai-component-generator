@@ -15,6 +15,7 @@ import {
   Transition,
   CopyButton,
   Tooltip,
+  MediaQuery,
 } from '@mantine/core';
 import Image from 'next/image';
 import { Sandpack } from '@codesandbox/sandpack-react';
@@ -178,9 +179,15 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           size={26}
           color="#6F7175"
         >
-          Create and preview React <Image src={reactLogo} alt="react" /> +
-          Tailwind CSS <Image src={tailwindLogo} alt="tailwind" /> components
-          using AI
+          Create and preview{' '}
+          <Text span color="#202123" weight={600}>
+            React
+          </Text>{' '}
+          <Image src={reactLogo} alt="react" /> +
+          <Text span color="#202123" weight={600}>
+            Tailwind CSS
+          </Text>{' '}
+          <Image src={tailwindLogo} alt="tailwind" /> components using AI
         </Title>
 
         <Collapse
@@ -235,9 +242,10 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         </Collapse>
 
         <Container size="sm" fluid mt="xl">
-          <Flex justify="center" align="flex-end">
-            <Box w="75%">
+          <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+            <Flex justify="center" align="center" direction="column">
               <Autocomplete
+                w="100%"
                 mt="xl"
                 size="xl"
                 withinPortal
@@ -258,11 +266,8 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 ]}
                 onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
               />
-            </Box>
-
-            <Box w="25%" ml="md">
               <Button
-                mt={30}
+                mt="md"
                 color="dark"
                 onClick={generateTextWithGpt}
                 disabled={isLoading}
@@ -272,8 +277,49 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
               >
                 🪄 MAKE MAGIC
               </Button>
-            </Box>
-          </Flex>
+            </Flex>
+          </MediaQuery>
+
+          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+            <Flex justify="center" align="flex-end">
+              <Box w="75%">
+                <Autocomplete
+                  mt="xl"
+                  size="xl"
+                  withinPortal
+                  value={promptInputValue}
+                  onChange={setPromptInputValue}
+                  placeholder="e.g a tip calculator"
+                  data={[
+                    {
+                      value:
+                        'a white board to draw with the mouse, a color picker and a reset button',
+                      group: 'Most used',
+                    },
+                    { value: 'a mortgage calculator', group: 'Most used' },
+                    { value: 'a tip calculator', group: 'Most used' },
+                    { value: 'a password generator', group: 'Most used' },
+                    { value: 'a calendar', group: 'Most used' },
+                    { value: 'a product card', group: 'Most used' },
+                  ]}
+                  onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
+                />
+              </Box>
+
+              <Box w="25%" ml="md">
+                <Button
+                  color="dark"
+                  onClick={generateTextWithGpt}
+                  disabled={isLoading}
+                  fullWidth
+                  size="xl"
+                  aria-label="generate component"
+                >
+                  🪄 MAKE MAGIC
+                </Button>
+              </Box>
+            </Flex>
+          </MediaQuery>
 
           {isLoading && (
             <Transition
