@@ -242,106 +242,118 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         </Collapse>
 
         <Container size="sm" fluid mt="xl">
-          <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-            <Flex justify="center" align="center" direction="column">
-              <Autocomplete
-                w="100%"
-                mt="xl"
-                size="xl"
-                withinPortal
-                value={promptInputValue}
-                onChange={setPromptInputValue}
-                placeholder="e.g a tip calculator"
-                data={[
-                  {
-                    value:
-                      'a white board to draw with the mouse, a color picker and a reset button',
-                    group: 'Most used',
-                  },
-                  { value: 'a mortgage calculator', group: 'Most used' },
-                  { value: 'a tip calculator', group: 'Most used' },
-                  { value: 'a password generator', group: 'Most used' },
-                  { value: 'a calendar', group: 'Most used' },
-                  { value: 'a product card', group: 'Most used' },
-                ]}
-                onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
-              />
-              <Button
-                mt="md"
-                color="dark"
-                onClick={generateTextWithGpt}
-                disabled={isLoading}
-                fullWidth
-                size="xl"
-                aria-label="generate component"
-              >
-                🪄 MAKE MAGIC
-              </Button>
-            </Flex>
-          </MediaQuery>
+          <Transition
+            mounted={!opened}
+            transition="fade"
+            duration={400}
+            timingFunction="ease"
+          >
+            {(style) => (
+              <Box style={style}>
+                <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+                  <Flex justify="center" align="center" direction="column">
+                    <Autocomplete
+                      w="100%"
+                      mt="xl"
+                      size="xl"
+                      withinPortal
+                      value={promptInputValue}
+                      onChange={setPromptInputValue}
+                      placeholder="e.g a tip calculator"
+                      data={[
+                        {
+                          value:
+                            'a white board to draw with the mouse, a color picker and a reset button',
+                          group: 'Most used',
+                        },
+                        { value: 'a mortgage calculator', group: 'Most used' },
+                        { value: 'a tip calculator', group: 'Most used' },
+                        { value: 'a password generator', group: 'Most used' },
+                        { value: 'a calendar', group: 'Most used' },
+                        { value: 'a product card', group: 'Most used' },
+                      ]}
+                      onKeyDown={getHotkeyHandler([
+                        ['Enter', generateTextWithGpt],
+                      ])}
+                    />
+                    <Button
+                      mt="md"
+                      color="dark"
+                      onClick={generateTextWithGpt}
+                      disabled={isLoading}
+                      fullWidth
+                      size="xl"
+                      aria-label="generate component"
+                    >
+                      🪄 MAKE MAGIC
+                    </Button>
+                  </Flex>
+                </MediaQuery>
 
-          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-            <Flex justify="center" align="flex-end">
-              <Box w="75%">
-                <Autocomplete
-                  mt="xl"
-                  size="xl"
-                  withinPortal
-                  value={promptInputValue}
-                  onChange={setPromptInputValue}
-                  placeholder="e.g a tip calculator"
-                  data={[
-                    {
-                      value:
-                        'a white board to draw with the mouse, a color picker and a reset button',
-                      group: 'Most used',
-                    },
-                    { value: 'a mortgage calculator', group: 'Most used' },
-                    { value: 'a tip calculator', group: 'Most used' },
-                    { value: 'a password generator', group: 'Most used' },
-                    { value: 'a calendar', group: 'Most used' },
-                    { value: 'a product card', group: 'Most used' },
-                  ]}
-                  onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
-                />
+                <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+                  <Flex justify="center" align="flex-end">
+                    <Box w="75%">
+                      <Autocomplete
+                        mt="xl"
+                        size="xl"
+                        withinPortal
+                        value={promptInputValue}
+                        onChange={setPromptInputValue}
+                        placeholder="e.g a tip calculator"
+                        data={[
+                          {
+                            value:
+                              'a white board to draw with the mouse, a color picker and a reset button',
+                            group: 'Most used',
+                          },
+                          {
+                            value: 'a mortgage calculator',
+                            group: 'Most used',
+                          },
+                          { value: 'a tip calculator', group: 'Most used' },
+                          { value: 'a password generator', group: 'Most used' },
+                          { value: 'a calendar', group: 'Most used' },
+                          { value: 'a product card', group: 'Most used' },
+                        ]}
+                        onKeyDown={getHotkeyHandler([
+                          ['Enter', generateTextWithGpt],
+                        ])}
+                      />
+                    </Box>
+
+                    <Box w="25%" ml="md">
+                      <Button
+                        color="dark"
+                        onClick={generateTextWithGpt}
+                        disabled={isLoading}
+                        fullWidth
+                        size="xl"
+                        aria-label="generate component"
+                      >
+                        🪄 MAKE MAGIC
+                      </Button>
+                    </Box>
+                  </Flex>
+                </MediaQuery>
               </Box>
+            )}
+          </Transition>
 
-              <Box w="25%" ml="md">
-                <Button
-                  color="dark"
-                  onClick={generateTextWithGpt}
-                  disabled={isLoading}
-                  fullWidth
-                  size="xl"
-                  aria-label="generate component"
-                >
-                  🪄 MAKE MAGIC
-                </Button>
-              </Box>
-            </Flex>
-          </MediaQuery>
-
-          {isLoading && (
-            <Transition
-              mounted={isLoading}
-              transition="fade"
-              duration={400}
-              timingFunction="ease"
-            >
-              {(style) => (
-                <Flex style={style} mt="lg" justify="center" align="center">
-                  <Loader
-                    size="xs"
-                    mr={4}
-                    color={isDark ? 'yellow' : 'indigo'}
-                  />
-                  <Text weight="bold">
-                    Please hang on while the AI is doing some magic 🎩🪄...
-                  </Text>
-                </Flex>
-              )}
-            </Transition>
-          )}
+          <Transition
+            mounted={isLoading}
+            transition="fade"
+            duration={400}
+            timingFunction="ease"
+          >
+            {(style) => (
+              <Flex style={style} mt="lg" justify="center" align="center">
+                <Loader size="xs" mr={4} color={isDark ? 'yellow' : 'indigo'} />
+                <Text weight="bold">
+                  Please hang on while the AI is doing some magic 🎩🪄...
+                </Text>
+              </Flex>
+            )}
+          </Transition>
         </Container>
       </Box>
 
@@ -391,6 +403,61 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           </Flex>
         </Container>
       )}
+      <Transition
+        mounted={opened}
+        transition="fade"
+        duration={400}
+        timingFunction="ease"
+      >
+        {(style) => (
+          <Container
+            w="100%"
+            size="lg"
+            mb="sm"
+            style={style}
+            sx={{ position: 'fixed', bottom: 0, zIndex: 999 }}
+          >
+            <Flex justify="center" align="flex-end" w="100%">
+              <Box w="75%">
+                <Autocomplete
+                  mt="xl"
+                  size="xl"
+                  withinPortal
+                  value={promptInputValue}
+                  onChange={setPromptInputValue}
+                  placeholder="e.g a tip calculator"
+                  data={[
+                    {
+                      value:
+                        'a white board to draw with the mouse, a color picker and a reset button',
+                      group: 'Most used',
+                    },
+                    { value: 'a mortgage calculator', group: 'Most used' },
+                    { value: 'a tip calculator', group: 'Most used' },
+                    { value: 'a password generator', group: 'Most used' },
+                    { value: 'a calendar', group: 'Most used' },
+                    { value: 'a product card', group: 'Most used' },
+                  ]}
+                  onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
+                />
+              </Box>
+
+              <Box w="25%" ml="md">
+                <Button
+                  color="dark"
+                  onClick={generateTextWithGpt}
+                  disabled={isLoading}
+                  fullWidth
+                  size="xl"
+                  aria-label="generate component"
+                >
+                  🪄 MAKE MAGIC
+                </Button>
+              </Box>
+            </Flex>
+          </Container>
+        )}
+      </Transition>
     </>
   );
 };
