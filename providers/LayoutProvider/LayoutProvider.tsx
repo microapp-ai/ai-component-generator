@@ -7,6 +7,8 @@ interface LayoutProviderProps {
 
 const LayoutProvider: FC<LayoutProviderProps> = ({
   children,
-}): React.ReactElement => <MainLayout>{children}</MainLayout>;
+}): React.ReactElement => (
+  <MainLayout withFooter={false}>{children}</MainLayout>
+);
 
 export default LayoutProvider;

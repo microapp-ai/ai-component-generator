@@ -166,15 +166,18 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         />
       </Head>
       <Box component="main" pb={40} mt={50} w="100%" h="100%">
-        <GradientColorText
-          colors={isDark ? darkTextGradient : lightTextGradient}
-        >
-          <Title order={1} align="center" weight="bold" size={60}>
-            AI Component Generator
-          </Title>
-        </GradientColorText>
+        <Title order={1} align="center" weight="bold" size={42}>
+          AI-Powered Component Generator
+        </Title>
 
-        <Title order={2} align="center" weight="bold" size={28}>
+        <Title
+          mt={20}
+          order={2}
+          align="center"
+          weight={400}
+          size={26}
+          color="#6F7175"
+        >
           Create and preview React <Image src={reactLogo} alt="react" /> +
           Tailwind CSS <Image src={tailwindLogo} alt="tailwind" /> components
           using AI
@@ -231,41 +234,46 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           />
         </Collapse>
 
-        <Container size="sm">
-          <Autocomplete
-            mt="xl"
-            size="md"
-            withinPortal
-            value={promptInputValue}
-            onChange={setPromptInputValue}
-            label="Describe your component here:"
-            placeholder="e.g a tip calculator"
-            data={[
-              {
-                value:
-                  'a white board to draw with the mouse, a color picker and a reset button',
-                group: 'Most used',
-              },
-              { value: 'a mortgage calculator', group: 'Most used' },
-              { value: 'a tip calculator', group: 'Most used' },
-              { value: 'a password generator', group: 'Most used' },
-              { value: 'a calendar', group: 'Most used' },
-              { value: 'a product card', group: 'Most used' },
-            ]}
-            onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
-          />
+        <Container size="sm" fluid mt="xl">
+          <Flex justify="center" align="flex-end">
+            <Box w="75%">
+              <Autocomplete
+                mt="xl"
+                size="xl"
+                withinPortal
+                value={promptInputValue}
+                onChange={setPromptInputValue}
+                placeholder="e.g a tip calculator"
+                data={[
+                  {
+                    value:
+                      'a white board to draw with the mouse, a color picker and a reset button',
+                    group: 'Most used',
+                  },
+                  { value: 'a mortgage calculator', group: 'Most used' },
+                  { value: 'a tip calculator', group: 'Most used' },
+                  { value: 'a password generator', group: 'Most used' },
+                  { value: 'a calendar', group: 'Most used' },
+                  { value: 'a product card', group: 'Most used' },
+                ]}
+                onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
+              />
+            </Box>
 
-          <Button
-            mt={30}
-            color="dark"
-            onClick={generateTextWithGpt}
-            disabled={isLoading}
-            fullWidth
-            size="lg"
-            aria-label="generate component"
-          >
-            Make magic 🪄
-          </Button>
+            <Box w="25%" ml="md">
+              <Button
+                mt={30}
+                color="dark"
+                onClick={generateTextWithGpt}
+                disabled={isLoading}
+                fullWidth
+                size="xl"
+                aria-label="generate component"
+              >
+                🪄 MAKE MAGIC
+              </Button>
+            </Box>
+          </Flex>
 
           {isLoading && (
             <Transition

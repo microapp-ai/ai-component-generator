@@ -5,9 +5,10 @@ import { useStyles } from './styles';
 
 interface MainLayoutProps {
   children: React.ReactNode;
+  withFooter: boolean;
 }
 
-const MainLayout: FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: FC<MainLayoutProps> = ({ children, withFooter = true }) => {
   const { classes } = useStyles();
 
   return (
@@ -15,9 +16,11 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
       <div className={classes.mainContainer}>
         <NavBar />
         <main className={classes.childrenContainer}>
-          <Container className={classes.children}>{children}</Container>
+          <Container size="lg" className={classes.children}>
+            {children}
+          </Container>
         </main>
-        <Footer />
+        {withFooter && <Footer />}
       </div>
     </>
   );
