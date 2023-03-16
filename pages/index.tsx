@@ -87,7 +87,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       try {
         const response = await fetch(
           process.env.NODE_ENV === 'production'
-            ? `https://${process.env.VERCEL_URL}`
+            ? 'https://ai-component-generator-git-feat-new-ui-microapp.vercel.app/api/magic'
             : '/api/magic',
           {
             method: 'POST',
