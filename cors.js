@@ -4,7 +4,7 @@ export default cors({
   origin:
     process.env.NODE_ENV === 'development'
       ? '*'
-      : 'https://ai-component-generator-git-feat-new-ui-microapp.vercel.app',
+      : `https://${process.env.VERCEL_URL}`,
   headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
   methods: ['GET', 'HEAD', 'POST'],
   expose: [],
