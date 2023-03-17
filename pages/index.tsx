@@ -185,15 +185,15 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 size={26}
                 color="#6F7175"
               >
-                Create and preview{' '}
+                Create and preview <Image src={reactLogo} alt="react" />{' '}
                 <Text span color="#202123" weight={600}>
                   React
                 </Text>{' '}
-                <Image src={reactLogo} alt="react" /> +
+                + <Image src={tailwindLogo} alt="tailwind" />{' '}
                 <Text span color="#202123" weight={600}>
                   Tailwind CSS
                 </Text>{' '}
-                <Image src={tailwindLogo} alt="tailwind" /> components using AI
+                components using AI
               </Title>
             </Box>
           )}
