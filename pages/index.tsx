@@ -26,6 +26,7 @@ import { PromptButton, PromptInput } from '@/components';
 import { magicIcon, reactLogo, tailwindLogo } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import ActionBar from '@/components/ActionBar';
 
 interface HomeProps {
   code: string;
@@ -335,52 +336,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         </Container>
       </Box>
 
-      {(codeId || code) && (
-        <Container size="xs" mb={40}>
-          <Flex justify="center" align="center" gap="xs">
-            <Badge
-              sx={{ cursor: 'pointer' }}
-              pl={8}
-              size="lg"
-              color={isDark ? 'yellow' : 'indigo'}
-              radius="xl"
-              leftSection={twitterIcon}
-            >
-              <TwitterShareButton
-                hashtags={[
-                  'microapp',
-                  'ai',
-                  'chatgpt',
-                  'react',
-                  'nextjs',
-                  'tailwindcss',
-                ]}
-                title="Checkout this React + Tailwind CSS component created with AI"
-                url={`${shareUrl}?id=${codeId}`}
-              >
-                SHARE YOUR COMPONENT
-              </TwitterShareButton>
-            </Badge>
-            <CopyButton value={`${shareUrl}?id=${codeId}`} timeout={2000}>
-              {({ copied, copy }) => (
-                <Tooltip
-                  label={copied ? 'URL Copied' : 'Copy URL'}
-                  withArrow
-                  position="right"
-                >
-                  <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                    {copied ? (
-                      <IconCheck size="1rem" />
-                    ) : (
-                      <IconCopy size="1rem" />
-                    )}
-                  </ActionIcon>
-                </Tooltip>
-              )}
-            </CopyButton>
-          </Flex>
-        </Container>
-      )}
       <Transition
         mounted={opened}
         transition="fade"
@@ -395,27 +350,8 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             style={style}
             sx={{ position: 'fixed', bottom: 0, zIndex: 999 }}
           >
-            <Flex justify="center" align="flex-end" w="100%">
-              <Box w="75%">
-                <PromptInput
-                  value={promptInputValue}
-                  onChange={setPromptInputValue}
-                  placeholder="e.g a tip calculator"
-                  onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
-                />
-              </Box>
-
-              <Box w="25%" ml="md">
-                <PromptButton
-                  title="MAKE MAGIC"
-                  leftIcon={
-                    <Image src={magicIcon} height={19} alt="make magic" />
-                  }
-                  onClick={generateTextWithGpt}
-                  isLoading={isLoading}
-                  ariaLabel="generate component"
-                />
-              </Box>
+            <Flex justify="center" align="center">
+              <ActionBar />
             </Flex>
           </Container>
         )}

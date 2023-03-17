@@ -5,7 +5,7 @@ interface PromptButtonProps {
   title: string;
   ariaLabel: string;
   onClick: MouseEventHandler<HTMLButtonElement> | undefined;
-  isLoading: boolean;
+  isLoading?: boolean;
   fullWidth?: boolean;
   radius?: MantineNumberSize | undefined;
   size?: MantineSize | undefined;
@@ -17,7 +17,7 @@ const PromptButton: FC<PromptButtonProps> = ({
   title,
   ariaLabel,
   onClick,
-  isLoading,
+  isLoading = false,
   radius = '32px',
   size = 'xl',
   fullWidth = true,
