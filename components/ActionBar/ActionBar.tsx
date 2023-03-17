@@ -1,10 +1,26 @@
-import React from 'react';
-import { ActionIcon, Flex } from '@mantine/core';
-import { PromptButton } from '@/components';
+import React, { FC, KeyboardEventHandler, useState } from 'react';
+import { ActionIcon, Box, Flex, MantineSize, Transition } from '@mantine/core';
+import { PromptButton, PromptInput } from '@/components';
 import Image from 'next/image';
 import { magicIcon, promptIcon, shareIcon } from '@/assets';
 
-const ActionBar = () => {
+interface ActionBarProps {
+  value: string;
+  onChange: React.Dispatch<React.SetStateAction<string>>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement> | undefined;
+  placeholder: string;
+  inputSize: MantineSize | undefined;
+}
+
+const ActionBar: FC<ActionBarProps> = ({
+  value,
+  onChange,
+  placeholder,
+  onKeyDown,
+  inputSize,
+}) => {
+  const [isInputVisible, setInputVisible] = useState<boolean>(false);
+
   return (
     <Flex
       p="xs"
@@ -24,8 +40,31 @@ const ActionBar = () => {
         leftIcon={<Image src={magicIcon} height={19} alt="new component" />}
         title="NEW"
         ariaLabel="new component"
-        onClick={() => console.log('clicked')}
+        onClick={() => setInputVisible((prev) => !prev)}
+        width={100}
       />
+      <Transition
+        mounted={isInputVisible}
+        transition="scale-x"
+        duration={400}
+        timingFunction="ease"
+        onEnter={() => console.log('onEnter')}
+        onEntered={() => console.log('onEntered')}
+        onExit={() => console.log('onExit')}
+        onExited={() => console.log('onExited')}
+      >
+        {(style) => (
+          <Box w={500} style={style}>
+            <PromptInput
+              value={value}
+              onChange={onChange}
+              placeholder={placeholder}
+              onKeyDown={onKeyDown}
+              size={inputSize}
+            />
+          </Box>
+        )}
+      </Transition>
       <ActionIcon p="md" sx={{ border: '1px solid black', borderRadius: 20 }}>
         <Image src={promptIcon} alt="prompt" />
       </ActionIcon>

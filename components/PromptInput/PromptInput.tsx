@@ -4,7 +4,7 @@ import { Autocomplete, MantineNumberSize, MantineSize } from '@mantine/core';
 interface PromptInputProps {
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
-  onKeyDown: KeyboardEventHandler<HTMLInputElement> | undefined;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement> | undefined;
   placeholder: string;
   radius?: MantineNumberSize | undefined;
   size?: MantineSize | undefined;

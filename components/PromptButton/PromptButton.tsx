@@ -11,6 +11,7 @@ interface PromptButtonProps {
   size?: MantineSize | undefined;
   leftIcon?: ReactNode | undefined;
   mt?: MantineSize | undefined;
+  width?: any;
 }
 
 const PromptButton: FC<PromptButtonProps> = ({
@@ -23,6 +24,7 @@ const PromptButton: FC<PromptButtonProps> = ({
   fullWidth = true,
   leftIcon,
   mt,
+  width,
 }) => {
   return (
     <Button
@@ -35,6 +37,7 @@ const PromptButton: FC<PromptButtonProps> = ({
       aria-label={ariaLabel}
       leftIcon={leftIcon}
       mt={mt}
+      w={width}
     >
       {title}
     </Button>

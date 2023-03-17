@@ -351,7 +351,13 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             sx={{ position: 'fixed', bottom: 0, zIndex: 999 }}
           >
             <Flex justify="center" align="center">
-              <ActionBar />
+              <ActionBar
+                value={promptInputValue}
+                onChange={setPromptInputValue}
+                placeholder="e.g a tip calculator"
+                onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
+                inputSize="sm"
+              />
             </Flex>
           </Container>
         )}
