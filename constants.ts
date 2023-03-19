@@ -260,3 +260,26 @@ const MyCalendar = () => {
 
 export default MyCalendar;
 `;
+
+export const LOADING_TEXTS = [
+  {
+    text: 'Hold tight! Loading in progress...',
+    duration: 10,
+  },
+  {
+    text: `Sit back and relax. We're on it!`,
+    duration: 15,
+  },
+  {
+    text: 'Preparing the magic just for you...',
+    duration: 20,
+  },
+  {
+    text: 'Finishing up! Exciting stuff ahead!',
+    duration: 30,
+  },
+  {
+    text: `Sorry, taking longer than expected. Feel free to reload the page and try again if you'd like!`,
+    duration: 20,
+  },
+];

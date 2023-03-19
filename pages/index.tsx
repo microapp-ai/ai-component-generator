@@ -19,11 +19,12 @@ import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
 import Head from 'next/head';
 import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import Lottie from 'lottie-react';
-import { PromptButton, PromptInput } from '@/components';
+import { LoadingTextChanger, PromptButton, PromptInput } from '@/components';
 import { magicIcon, reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import ActionBar from '@/components/ActionBar';
+import { LOADING_TEXTS } from '@/constants';
 
 interface HomeProps {
   code: string;
@@ -204,12 +205,19 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           timingFunction="ease"
         >
           {(style) => (
-            <Flex style={style} mt="xl" justify="center" align="center">
+            <Flex
+              style={style}
+              mt="xl"
+              justify="center"
+              align="flex-start"
+              gap="lg"
+            >
               <Lottie
                 style={{ width: 290 }}
                 animationData={loadingAnimation}
                 loop
               />
+              <LoadingTextChanger texts={LOADING_TEXTS} />
             </Flex>
           )}
         </Transition>

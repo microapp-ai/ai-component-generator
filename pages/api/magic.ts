@@ -82,7 +82,7 @@ async function handler(req: any, res: any) {
       {
         messages: [...messages],
         model: 'gpt-3.5-turbo',
-        temperature: 0.8,
+        temperature: 0.7,
       },
       {
         headers: {
