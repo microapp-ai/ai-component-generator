@@ -13,7 +13,6 @@
     "@codesandbox/sandpack-react": "2.1.6",
     "@emotion/react": "^11.10.4",
     "@emotion/server": "^11.10.0",
-    "@lottiefiles/lottie-player": "^1.7.1",
     "@mantine/core": "6.0.0",
     "@mantine/hooks": "6.0.0",
     "@mantine/next": "6.0.0",
