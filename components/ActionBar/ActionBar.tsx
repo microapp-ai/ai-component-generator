@@ -10,6 +10,7 @@ interface ActionBarProps {
   onKeyDown?: KeyboardEventHandler<HTMLInputElement> | undefined;
   placeholder: string;
   inputSize: MantineSize | undefined;
+  onClick: () => void;
 }
 
 const ActionBar: FC<ActionBarProps> = ({
@@ -18,6 +19,7 @@ const ActionBar: FC<ActionBarProps> = ({
   placeholder,
   onKeyDown,
   inputSize,
+  onClick,
 }) => {
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
 
@@ -35,23 +37,32 @@ const ActionBar: FC<ActionBarProps> = ({
         bottom: 5,
       }}
     >
-      <PromptButton
-        size="sm"
-        leftIcon={<Image src={magicIcon} height={19} alt="new component" />}
-        title="NEW"
-        ariaLabel="new component"
-        onClick={() => setInputVisible((prev) => !prev)}
-        width={100}
-      />
+      <Transition
+        mounted={!isInputVisible}
+        transition="fade"
+        duration={200}
+        timingFunction="ease"
+      >
+        {(style) => (
+          <Box style={style}>
+            <PromptButton
+              size="sm"
+              leftIcon={
+                <Image src={magicIcon} height={19} alt="new component" />
+              }
+              title="NEW"
+              ariaLabel="new component"
+              onClick={() => setInputVisible((prev) => !prev)}
+              width={100}
+            />
+          </Box>
+        )}
+      </Transition>
       <Transition
         mounted={isInputVisible}
-        transition="scale-x"
+        transition="fade"
         duration={400}
         timingFunction="ease"
-        onEnter={() => console.log('onEnter')}
-        onEntered={() => console.log('onEntered')}
-        onExit={() => console.log('onExit')}
-        onExited={() => console.log('onExited')}
       >
         {(style) => (
           <Box w={500} style={style}>
@@ -61,6 +72,27 @@ const ActionBar: FC<ActionBarProps> = ({
               placeholder={placeholder}
               onKeyDown={onKeyDown}
               size={inputSize}
+            />
+          </Box>
+        )}
+      </Transition>
+      <Transition
+        mounted={isInputVisible}
+        transition="fade"
+        duration={400}
+        timingFunction="ease"
+      >
+        {(style) => (
+          <Box style={style}>
+            <PromptButton
+              size="sm"
+              leftIcon={
+                <Image src={magicIcon} height={19} alt="new component" />
+              }
+              title="MAKE MAGIC"
+              ariaLabel="new component"
+              onClick={onClick}
+              width={150}
             />
           </Box>
         )}

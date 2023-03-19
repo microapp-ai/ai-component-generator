@@ -1,14 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import {
   Flex,
-  Button,
   Box,
   Text,
   Title,
   Collapse,
   useMantineColorScheme,
   Container,
-  Badge,
   ActionIcon,
   Loader,
   Transition,
@@ -21,9 +19,9 @@ import { Sandpack } from '@codesandbox/sandpack-react';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
 import Head from 'next/head';
 import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
-import { TwitterShareButton } from 'next-share';
+import Lottie from 'lottie-react';
 import { PromptButton, PromptInput } from '@/components';
-import { magicIcon, reactLogo, tailwindLogo } from '@/assets';
+import { magicIcon, reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import ActionBar from '@/components/ActionBar';
@@ -208,10 +206,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         >
           {(style) => (
             <Flex style={style} mt="xl" justify="center" align="center">
-              <Loader size="xs" mr={4} color={isDark ? 'yellow' : 'indigo'} />
-              <Text weight="bold">
-                Please hang on while the AI is doing some magic 🎩🪄...
-              </Text>
+              <Lottie
+                style={{ width: 290 }}
+                animationData={loadingAnimation}
+                loop
+              />
             </Flex>
           )}
         </Transition>
@@ -356,6 +355,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 onChange={setPromptInputValue}
                 placeholder="e.g a tip calculator"
                 onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
+                onClick={generateTextWithGpt}
                 inputSize="sm"
               />
             </Flex>

@@ -2,6 +2,7 @@ export { default as emailShareLogo } from './email-share-light.svg';
 export { default as emailShareLogoDark } from './email-share-dark.svg';
 export { default as linkedInShareLogo } from './linkedin-share-light.svg';
 export { default as linkedInShareLogoDark } from './linkedin-share-dark.svg';
+export { default as loadingAnimation } from './loadingAnimation.json';
 export { default as logo } from './logo.svg';
 export { default as logoDark } from './logo-white.svg';
 export { default as logoFull } from './logo-full.svg';
