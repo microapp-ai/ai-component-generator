@@ -8,7 +8,6 @@ import {
   useMantineColorScheme,
   Container,
   ActionIcon,
-  Loader,
   Transition,
   CopyButton,
   Tooltip,
@@ -224,7 +223,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             position: 'relative',
           }}
         >
-          <Box sx={{ position: 'absolute', bottom: 5, left: 5, zIndex: 999 }}>
+          <Box sx={{ position: 'absolute', top: 5, right: 5, zIndex: 999 }}>
             <CopyButton value={data} timeout={2000}>
               {({ copied, copy }) => (
                 <Tooltip
@@ -244,10 +243,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             </CopyButton>
           </Box>
           <Sandpack
-            key="2"
+            key="1"
             template="react"
             theme={colorScheme}
             options={{
+              rtl: true,
               showTabs: false,
               showInlineErrors: false,
               showLineNumbers: false,
