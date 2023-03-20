@@ -292,7 +292,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       </Box>
 
       <Transition
-        mounted={true}
+        mounted={opened}
         transition="fade"
         duration={400}
         timingFunction="ease"
