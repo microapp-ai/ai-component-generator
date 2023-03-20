@@ -3,6 +3,7 @@ import { ActionIcon, Box, Flex, MantineSize, Transition } from '@mantine/core';
 import { PromptButton, PromptInput } from '@/components';
 import Image from 'next/image';
 import { magicIcon, promptIcon, shareIcon } from '@/assets';
+import { useStyles } from './style';
 
 interface ActionBarProps {
   value: string;
@@ -21,21 +22,16 @@ const ActionBar: FC<ActionBarProps> = ({
   inputSize,
   onClick,
 }) => {
+  const { classes } = useStyles();
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
 
   return (
     <Flex
+      className={classes.container}
       p="xs"
-      bg="#fff"
       justify="space-between"
       align="center"
       gap="sm"
-      sx={{
-        border: '1px solid #D9D9D9',
-        borderRadius: 50,
-        position: 'absolute',
-        bottom: 5,
-      }}
     >
       <Transition
         mounted={!isInputVisible}
@@ -97,10 +93,10 @@ const ActionBar: FC<ActionBarProps> = ({
           </Box>
         )}
       </Transition>
-      <ActionIcon p="md" sx={{ border: '1px solid black', borderRadius: 20 }}>
+      <ActionIcon p="md" className={classes.icon}>
         <Image src={promptIcon} alt="prompt" />
       </ActionIcon>
-      <ActionIcon p="md" sx={{ border: '1px solid black', borderRadius: 20 }}>
+      <ActionIcon p="md" className={classes.icon}>
         <Image src={shareIcon} alt="share" />
       </ActionIcon>
     </Flex>

@@ -16,10 +16,14 @@ import {
 import Image from 'next/image';
 import { Sandpack } from '@codesandbox/sandpack-react';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
-import Head from 'next/head';
 import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
 import Lottie from 'lottie-react';
-import { LoadingTextChanger, PromptButton, PromptInput } from '@/components';
+import {
+  LoadingTextChanger,
+  PromptButton,
+  PromptInput,
+  HeadSeo,
+} from '@/components';
 import { magicIcon, reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -31,14 +35,6 @@ interface HomeProps {
   prompt: string;
 }
 
-const darkTextGradient = [
-  '#F08080',
-  '#FFA07A',
-  '#FFDAB9',
-  '#F0E68C',
-  '#98FB98',
-];
-const lightTextGradient = ['#000', '#3f0d12', '#3a7bd5', '#00d2ff'];
 const shareUrl = 'https://www.microapp.ai/ai-component-generator';
 
 const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
@@ -115,55 +111,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
 
   return (
     <>
-      <Head>
-        <title>
-          Microapp.ai - AI component generator using React + Tailwind CSS
-        </title>
-        <meta
-          name="description"
-          content="Create React + Tailwind CSS components using AI."
-        />
-        <meta
-          name="keywords"
-          content="AI, react, tailwind, mantine, ui, components"
-        />
-        <meta
-          property="og:url"
-          content="https://www.microapp.ai/component-generator"
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:title"
-          content="Microapp.ai - AI component generator using React + Tailwind CSS"
-        />
-        <meta
-          property="og:description"
-          content="Create and Preview React + Tailwind CSS components using AI."
-        />
-        <meta
-          property="og:image"
-          content="https://ai-component-generator-delta.vercel.app/og.png"
-        />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content="microapp.ai" />
-        <meta
-          property="twitter:url"
-          content="https://www.microapp.ai/component-generator"
-        />
-        <meta
-          name="twitter:title"
-          content="Microapp.ai - AI component generator using React + Tailwind CSS"
-        />
-        <meta
-          name="twitter:description"
-          content="Create and Preview React + Tailwind CSS components using AI."
-        />
-        <meta
-          name="twitter:image"
-          content="https://ai-component-generator-delta.vercel.app/og.png"
-        />
-      </Head>
+      <HeadSeo />
       <Box component="main" w="100%" h="100%">
         <Transition
           mounted={!opened}
@@ -185,11 +133,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 color="#6F7175"
               >
                 Create and preview <Image src={reactLogo} alt="react" />{' '}
-                <Text span color="#202123" weight={600}>
+                <Text span color={isDark ? '#fff' : '#202123'} weight={600}>
                   React
                 </Text>{' '}
                 + <Image src={tailwindLogo} alt="tailwind" />{' '}
-                <Text span color="#202123" weight={600}>
+                <Text span color={isDark ? '#fff' : '#202123'} weight={600}>
                   Tailwind CSS
                 </Text>{' '}
                 components using AI
@@ -344,7 +292,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       </Box>
 
       <Transition
-        mounted={opened}
+        mounted={true}
         transition="fade"
         duration={400}
         timingFunction="ease"
