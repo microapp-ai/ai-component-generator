@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Flex, Text } from '@mantine/core';
+import { Box, Flex, Text } from '@mantine/core';
 import { useStyles } from './style';
 
 interface TextItem {
@@ -38,17 +38,17 @@ const LoadingTextChanger: FC<LoadingTextChangerProps> = ({ texts }) => {
   }, [texts, currentIndex]);
 
   return (
-    <Flex
-      justify="center"
-      align="center"
-      px="md"
-      py="sm"
-      className={classes.container}
-    >
-      <Text className={fadeOut ? classes.textFadeOut : classes.text}>
-        {texts[currentIndex].text}
-      </Text>
-    </Flex>
+    <Box className={classes.container}>
+      <Flex
+        justify="center"
+        align="center"
+        px="md"
+        py="sm"
+        className={fadeOut ? classes.boxFadeOut : classes.box}
+      >
+        <Text>{texts[currentIndex].text}</Text>
+      </Flex>
+    </Box>
   );
 };
 

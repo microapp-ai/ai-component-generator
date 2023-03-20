@@ -153,15 +153,9 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           timingFunction="ease"
         >
           {(style) => (
-            <Flex
-              style={style}
-              mt="xl"
-              justify="center"
-              align="flex-start"
-              gap="lg"
-            >
+            <Flex style={style} justify="center" align="center" gap="lg">
               <Lottie
-                style={{ width: 290 }}
+                style={{ width: 290, marginTop: 60 }}
                 animationData={loadingAnimation}
                 loop
               />
@@ -172,7 +166,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
 
         <Collapse
           mt="xl"
-          transitionDuration={700}
+          transitionDuration={400}
           transitionTimingFunction="linear"
           in={opened}
           sx={{
@@ -224,9 +218,9 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
 
         <Container size="sm" fluid mt={40}>
           <Transition
-            mounted={!opened}
+            mounted={!opened && !isLoading}
             transition="fade"
-            duration={400}
+            duration={200}
             timingFunction="ease"
           >
             {(style) => (
@@ -292,9 +286,9 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       </Box>
 
       <Transition
-        mounted={opened}
+        mounted={opened || isLoading}
         transition="fade"
-        duration={400}
+        duration={300}
         timingFunction="ease"
       >
         {(style) => (
