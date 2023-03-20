@@ -93,10 +93,10 @@ const ActionBar: FC<ActionBarProps> = ({
           </Box>
         )}
       </Transition>
-      <ActionIcon p="md" className={classes.icon}>
+      <ActionIcon className={classes.icon}>
         <Image src={promptIcon} alt="prompt" />
       </ActionIcon>
-      <ActionIcon p="md" className={classes.icon}>
+      <ActionIcon className={classes.icon}>
         <Image src={shareIcon} alt="share" />
       </ActionIcon>
     </Flex>
