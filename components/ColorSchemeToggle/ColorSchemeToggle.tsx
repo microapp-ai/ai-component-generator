@@ -1,7 +1,9 @@
 import { ActionIcon, Group, useMantineColorScheme } from '@mantine/core';
-import { IconSun, IconMoonStars } from '@tabler/icons-react';
+import { IconSunFilled, IconMoonFilled } from '@tabler/icons-react';
+import { useStyles } from './styles';
 
 const ColorSchemeToggle = () => {
+  const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   return (
@@ -9,21 +11,12 @@ const ColorSchemeToggle = () => {
       <ActionIcon
         onClick={() => toggleColorScheme()}
         size="lg"
-        sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[6]
-              : theme.colors.gray[0],
-          color:
-            theme.colorScheme === 'dark'
-              ? theme.colors.yellow[4]
-              : theme.colors.blue[6],
-        })}
+        className={classes.iconContainer}
       >
         {colorScheme === 'dark' ? (
-          <IconSun color="white" size={15} stroke={1.5} />
+          <IconSunFilled color="white" size={15} stroke={1.5} />
         ) : (
-          <IconMoonStars color="black" size={15} stroke={1.5} />
+          <IconMoonFilled style={{ color: '#202123' }} size={18} stroke={1.5} />
         )}
       </ActionIcon>
     </Group>

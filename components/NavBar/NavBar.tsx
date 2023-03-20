@@ -11,7 +11,7 @@ const NavBar: FC = () => {
   return (
     <>
       <Header height={56} className={classes.header} fixed>
-        <Container className={classes.inner}>
+        <Container size="xl" className={classes.inner}>
           <Group>
             <a href="https://www.microapp.ai" rel="noopener">
               <Logo full={matches} />

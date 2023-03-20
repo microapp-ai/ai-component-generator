@@ -12,6 +12,7 @@ export const useStyles = createStyles((theme) => ({
     overflow: 'auto',
   },
   children: {
+    position: 'relative',
     display: 'flex',
     flex: 1,
     flexDirection: 'column',

@@ -4,7 +4,7 @@ const nextConfig = {
   assetPrefix:
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
-      : 'https://ai-component-generator-delta.vercel.app',
+      : `https://${process.env.VERCEL_URL}`,
 };
 
 module.exports = nextConfig;
