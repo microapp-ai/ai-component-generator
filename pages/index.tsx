@@ -16,7 +16,7 @@ import {
 import Image from 'next/image';
 import { Sandpack } from '@codesandbox/sandpack-react';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
-import { IconBrandTwitter, IconCheck, IconCopy } from '@tabler/icons-react';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 import Lottie from 'lottie-react';
 import {
   LoadingTextChanger,
@@ -34,8 +34,6 @@ interface HomeProps {
   code: string;
   prompt: string;
 }
-
-const shareUrl = 'https://www.microapp.ai/ai-component-generator';
 
 const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   code,
@@ -297,6 +295,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 onClick={generateTextWithGpt}
                 inputSize="sm"
                 disabled={isLoading}
+                shareId={codeId}
               />
             </Flex>
           </Container>

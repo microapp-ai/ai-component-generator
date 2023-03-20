@@ -1,5 +1,5 @@
 import { FC, MouseEventHandler, ReactNode } from 'react';
-import { Button, MantineNumberSize, MantineSize } from '@mantine/core';
+import { Button, MantineNumberSize, MantineSize, Text } from '@mantine/core';
 
 interface PromptButtonProps {
   title: string;
@@ -30,8 +30,8 @@ const PromptButton: FC<PromptButtonProps> = ({
 }) => {
   return (
     <Button
-      radius={radius}
       color="dark"
+      radius={radius}
       onClick={onClick}
       disabled={disabled}
       fullWidth={fullWidth}
@@ -42,7 +42,9 @@ const PromptButton: FC<PromptButtonProps> = ({
       w={width}
       loading={isLoading}
     >
-      {title}
+      <Text size={20} weight={600}>
+        {title}
+      </Text>
     </Button>
   );
 };

@@ -4,13 +4,19 @@ import {
   Box,
   Flex,
   MantineSize,
-  Tooltip,
   Transition,
+  useMantineColorScheme,
 } from '@mantine/core';
-import { PromptButton, PromptInput } from '@/components';
+import { PromptButton, PromptInput, ShareOptionsBar } from '@/components';
 import Image from 'next/image';
-import { magicIcon, promptIcon, shareIcon } from '@/assets';
-import { useStyles } from './style';
+import {
+  magicIcon,
+  promptIconLight,
+  shareIconLight,
+  promptIconDark,
+  shareIconDark,
+} from '@/assets';
+import { useStyles } from './styles';
 
 interface ActionBarProps {
   value: string;
@@ -20,6 +26,7 @@ interface ActionBarProps {
   inputSize: MantineSize | undefined;
   onClick: () => void;
   disabled: boolean;
+  shareId?: string;
 }
 
 const ActionBar: FC<ActionBarProps> = ({
@@ -30,9 +37,17 @@ const ActionBar: FC<ActionBarProps> = ({
   inputSize,
   onClick,
   disabled,
+  shareId = '',
 }) => {
   const { classes } = useStyles();
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
+  const [areShareOptionsVisible, setShareOptionsVisible] =
+    useState<boolean>(false);
+
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
+  const shareIcon = isDark ? shareIconDark : shareIconLight;
+  const promptIcon = isDark ? promptIconDark : promptIconLight;
 
   return (
     <Flex
@@ -58,7 +73,7 @@ const ActionBar: FC<ActionBarProps> = ({
               title="NEW"
               ariaLabel="new component"
               onClick={() => setInputVisible((prev) => !prev)}
-              width={100}
+              width={120}
               disabled={disabled}
             />
           </Box>
@@ -78,7 +93,6 @@ const ActionBar: FC<ActionBarProps> = ({
               placeholder={placeholder}
               onKeyDown={onKeyDown}
               size={inputSize}
-              autoFocus
             />
           </Box>
         )}
@@ -99,7 +113,7 @@ const ActionBar: FC<ActionBarProps> = ({
               title="MAKE MAGIC"
               ariaLabel="new component"
               onClick={onClick}
-              width={150}
+              width={190}
             />
           </Box>
         )}
@@ -107,9 +121,30 @@ const ActionBar: FC<ActionBarProps> = ({
       <ActionIcon className={classes.icon}>
         <Image src={promptIcon} alt="prompt" />
       </ActionIcon>
-      <ActionIcon className={classes.icon}>
-        <Image src={shareIcon} alt="share" />
-      </ActionIcon>
+      <Transition
+        mounted={!areShareOptionsVisible}
+        transition="fade"
+        duration={100}
+        timingFunction="ease"
+      >
+        {(style) => (
+          <ActionIcon
+            style={style}
+            className={classes.icon}
+            onClick={() => setShareOptionsVisible((prev) => !prev)}
+          >
+            <Image src={shareIcon} alt="share" />
+          </ActionIcon>
+        )}
+      </Transition>
+      <Transition
+        mounted={areShareOptionsVisible}
+        transition="fade"
+        duration={400}
+        timingFunction="ease"
+      >
+        {(style) => <ShareOptionsBar style={style} id={shareId} />}
+      </Transition>
     </Flex>
   );
 };
