@@ -4,6 +4,7 @@ import {
   Box,
   Flex,
   MantineSize,
+  Tooltip,
   Transition,
   useMantineColorScheme,
 } from '@mantine/core';
@@ -27,6 +28,7 @@ interface ActionBarProps {
   onClick: () => void;
   disabled: boolean;
   shareId?: string;
+  prompt?: string;
 }
 
 const ActionBar: FC<ActionBarProps> = ({
@@ -38,10 +40,13 @@ const ActionBar: FC<ActionBarProps> = ({
   onClick,
   disabled,
   shareId = '',
+  prompt = '',
 }) => {
   const { classes } = useStyles();
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
   const [areShareOptionsVisible, setShareOptionsVisible] =
+    useState<boolean>(false);
+  const [isPromptContainerVisible, setPromptContainerVisible] =
     useState<boolean>(false);
 
   const { colorScheme } = useMantineColorScheme();
@@ -118,9 +123,27 @@ const ActionBar: FC<ActionBarProps> = ({
           </Box>
         )}
       </Transition>
-      <ActionIcon className={classes.icon}>
-        <Image src={promptIcon} alt="prompt" />
-      </ActionIcon>
+      <Transition
+        mounted={isPromptContainerVisible}
+        transition="fade"
+        duration={400}
+        timingFunction="ease"
+      >
+        {(style) => (
+          <Flex style={style} justify="center" align="center" gap={2}>
+            {prompt}
+          </Flex>
+        )}
+      </Transition>
+      <Tooltip label="See & copy prompt" withArrow position="top">
+        <ActionIcon
+          className={classes.icon}
+          onClick={() => setPromptContainerVisible((prev) => !prev)}
+          disabled={disabled}
+        >
+          <Image src={promptIcon} alt="prompt" />
+        </ActionIcon>
+      </Tooltip>
       <Transition
         mounted={!areShareOptionsVisible}
         transition="fade"
@@ -132,6 +155,7 @@ const ActionBar: FC<ActionBarProps> = ({
             style={style}
             className={classes.icon}
             onClick={() => setShareOptionsVisible((prev) => !prev)}
+            disabled={disabled}
           >
             <Image src={shareIcon} alt="share" />
           </ActionIcon>

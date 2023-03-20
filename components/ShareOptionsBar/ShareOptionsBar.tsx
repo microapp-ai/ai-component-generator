@@ -14,7 +14,7 @@ import {
 } from '@/assets';
 import { IconCheck } from '@tabler/icons-react';
 
-const url = 'https://www.microapp.ai/ai-component-generator';
+const url = 'https://www.microapp.ai/build';
 
 interface ShareOptionsBarProps {
   id: string;

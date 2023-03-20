@@ -296,6 +296,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 inputSize="sm"
                 disabled={isLoading}
                 shareId={codeId}
+                prompt={prompt}
               />
             </Flex>
           </Container>
