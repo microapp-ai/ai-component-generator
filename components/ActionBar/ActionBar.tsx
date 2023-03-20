@@ -1,5 +1,12 @@
 import React, { FC, KeyboardEventHandler, useState } from 'react';
-import { ActionIcon, Box, Flex, MantineSize, Transition } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Flex,
+  MantineSize,
+  Tooltip,
+  Transition,
+} from '@mantine/core';
 import { PromptButton, PromptInput } from '@/components';
 import Image from 'next/image';
 import { magicIcon, promptIcon, shareIcon } from '@/assets';
@@ -12,6 +19,7 @@ interface ActionBarProps {
   placeholder: string;
   inputSize: MantineSize | undefined;
   onClick: () => void;
+  disabled: boolean;
 }
 
 const ActionBar: FC<ActionBarProps> = ({
@@ -21,6 +29,7 @@ const ActionBar: FC<ActionBarProps> = ({
   onKeyDown,
   inputSize,
   onClick,
+  disabled,
 }) => {
   const { classes } = useStyles();
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
@@ -50,6 +59,7 @@ const ActionBar: FC<ActionBarProps> = ({
               ariaLabel="new component"
               onClick={() => setInputVisible((prev) => !prev)}
               width={100}
+              disabled={disabled}
             />
           </Box>
         )}
@@ -68,6 +78,7 @@ const ActionBar: FC<ActionBarProps> = ({
               placeholder={placeholder}
               onKeyDown={onKeyDown}
               size={inputSize}
+              autoFocus
             />
           </Box>
         )}

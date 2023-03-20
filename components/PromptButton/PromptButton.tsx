@@ -12,6 +12,7 @@ interface PromptButtonProps {
   leftIcon?: ReactNode | undefined;
   mt?: MantineSize | undefined;
   width?: any;
+  disabled?: boolean;
 }
 
 const PromptButton: FC<PromptButtonProps> = ({
@@ -25,19 +26,21 @@ const PromptButton: FC<PromptButtonProps> = ({
   leftIcon,
   mt,
   width,
+  disabled = false,
 }) => {
   return (
     <Button
       radius={radius}
       color="dark"
       onClick={onClick}
-      disabled={isLoading}
+      disabled={disabled}
       fullWidth={fullWidth}
       size={size}
       aria-label={ariaLabel}
       leftIcon={leftIcon}
       mt={mt}
       w={width}
+      loading={isLoading}
     >
       {title}
     </Button>

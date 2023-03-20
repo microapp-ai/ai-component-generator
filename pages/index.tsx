@@ -54,17 +54,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const twitterIcon = (
-    <ActionIcon
-      size="xs"
-      color={isDark ? 'yellow' : 'indigo'}
-      radius="xl"
-      variant="transparent"
-    >
-      <IconBrandTwitter size={20} />
-    </ActionIcon>
-  );
-
   useEffect(() => {
     if (code) {
       setData(code);
@@ -242,7 +231,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                         <Image src={magicIcon} height={19} alt="make magic" />
                       }
                       onClick={generateTextWithGpt}
-                      isLoading={isLoading}
+                      disabled={isLoading}
                       ariaLabel="generate component"
                     />
                   </Flex>
@@ -307,6 +296,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
                 onClick={generateTextWithGpt}
                 inputSize="sm"
+                disabled={isLoading}
               />
             </Flex>
           </Container>

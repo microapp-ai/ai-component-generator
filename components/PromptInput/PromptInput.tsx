@@ -8,6 +8,7 @@ interface PromptInputProps {
   placeholder: string;
   radius?: MantineNumberSize | undefined;
   size?: MantineSize | undefined;
+  autoFocus?: boolean;
 }
 
 const PromptInput: FC<PromptInputProps> = ({
@@ -17,9 +18,11 @@ const PromptInput: FC<PromptInputProps> = ({
   placeholder,
   radius = '32px',
   size = 'xl',
+  autoFocus = false,
 }) => {
   return (
     <Autocomplete
+      autoFocus={autoFocus}
       radius={radius}
       w="100%"
       size={size}
