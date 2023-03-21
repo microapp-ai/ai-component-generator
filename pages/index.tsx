@@ -170,7 +170,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             position: 'relative',
           }}
         >
-          <Box sx={{ position: 'absolute', top: 5, right: 5, zIndex: 999 }}>
+          <Box sx={{ position: 'absolute', top: 5, right: 15, zIndex: 999 }}>
             <CopyButton value={data} timeout={2000}>
               {({ copied, copy }) => (
                 <Tooltip
