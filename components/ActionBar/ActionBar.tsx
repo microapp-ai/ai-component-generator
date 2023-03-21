@@ -133,7 +133,7 @@ const ActionBar: FC<ActionBarProps> = ({
             gap={4}
             className={classes.promptContainer}
           >
-            <Text truncate size={18}>
+            <Text truncate size={18} className={classes.promptText}>
               {prompt}
             </Text>
             <CopyButton value={prompt} timeout={2000}>
@@ -149,9 +149,15 @@ const ActionBar: FC<ActionBarProps> = ({
                     onClick={copy}
                   >
                     {copied ? (
-                      <IconCheck color="#202123" size="1.2rem" />
+                      <IconCheck
+                        color={isDark ? '#FDFDFD' : '#202123'}
+                        size="1.2rem"
+                      />
                     ) : (
-                      <IconCopy color="#202123" size="1.2rem" />
+                      <IconCopy
+                        color={isDark ? '#FDFDFD' : '#202123'}
+                        size="1.2rem"
+                      />
                     )}
                   </ActionIcon>
                 </Tooltip>

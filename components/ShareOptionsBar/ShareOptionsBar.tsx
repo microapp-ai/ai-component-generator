@@ -1,5 +1,12 @@
 import { FC } from 'react';
-import { Flex, Text, ActionIcon, CopyButton, Tooltip } from '@mantine/core';
+import {
+  Flex,
+  Text,
+  ActionIcon,
+  CopyButton,
+  Tooltip,
+  useMantineColorScheme,
+} from '@mantine/core';
 import Image from 'next/image';
 import {
   TwitterShareButton,
@@ -7,10 +14,14 @@ import {
   LinkedinShareButton,
 } from 'next-share';
 import {
-  shareFacebookIcon,
-  shareLinkedInIcon,
-  shareLinkIcon,
-  shareTwitterIcon,
+  shareFacebookIconLight,
+  shareLinkedInIconLight,
+  shareLinkIconLight,
+  shareTwitterIconLight,
+  shareFacebookIconDark,
+  shareLinkIconDark,
+  shareLinkedInIconDark,
+  shareTwitterIconDark,
 } from '@/assets';
 import { IconCheck } from '@tabler/icons-react';
 
@@ -23,6 +34,19 @@ interface ShareOptionsBarProps {
 
 const ShareOptionsBar: FC<ShareOptionsBarProps> = ({ id, style }) => {
   const shareUrl = `${url}/?id=${id}`;
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const shareLinkIcon = isDark ? shareLinkIconDark : shareLinkIconLight;
+  const shareTwitterIcon = isDark
+    ? shareTwitterIconDark
+    : shareTwitterIconLight;
+  const shareLinkedInIcon = isDark
+    ? shareLinkedInIconDark
+    : shareLinkedInIconLight;
+  const shareFacebookIcon = isDark
+    ? shareFacebookIconDark
+    : shareFacebookIconLight;
 
   return (
     <Flex

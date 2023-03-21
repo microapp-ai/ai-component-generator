@@ -22,11 +22,15 @@ export const useStyles = createStyles((theme) => ({
     maxWidth: '100%',
     borderRadius: 8,
     padding: 12,
-    backgroundColor: theme.colorScheme === 'dark' ? '#fff' : '#EBEBEB',
+    backgroundColor: theme.colorScheme === 'dark' ? '#4A4B4E' : '#EBEBEB',
     border: `1px solid ${theme.colorScheme === 'dark' ? '#fff' : '#D9D9D9'}`,
   },
 
   promptCopyIconButton: {
-    border: '1px solid #202123',
+    border: `1px solid ${theme.colorScheme === 'dark' ? '#FDFDFD' : '#202123'}`,
+  },
+
+  promptText: {
+    color: theme.colorScheme === 'dark' ? '#FDFDFD' : '#202123',
   },
 }));
