@@ -60,7 +60,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
 
   useEffect(() => {
     if (code) {
-      console.log('enters here');
       setData(code);
       setPromptInputValue(prompt);
       setAuxPromptValue(prompt);
