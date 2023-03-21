@@ -96,7 +96,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           setCodeId(code_id);
           router.push(
             process.env.NODE_ENV === 'production'
-              ? `?id=${code_id}`
+              ? `build?id=${code_id}`
               : `?id=${code_id}`,
             undefined,
             { shallow: true }
