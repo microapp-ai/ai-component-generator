@@ -9,7 +9,6 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import { ColorSchemeToggle, Logo } from '@/components';
 import { useStyles } from './styles';
-import Link from 'next/link';
 
 const NavBar: FC = () => {
   const { classes } = useStyles();
@@ -28,11 +27,14 @@ const NavBar: FC = () => {
           </Group>
 
           <Group>
-            <Link href="/about" style={{ textDecoration: 'none' }}>
+            <a
+              href="https://www.microapp.ai/about"
+              style={{ textDecoration: 'none' }}
+            >
               <Text size={16} weight={600} color={isDark ? '#fff' : '#202123'}>
                 About
               </Text>
-            </Link>
+            </a>
             <Text
               color={isDark ? '#fff' : '#202123'}
               size={16}
