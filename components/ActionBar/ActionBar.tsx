@@ -13,7 +13,6 @@ import {
 import { PromptButton, PromptInput, ShareOptionsBar } from '@/components';
 import Image from 'next/image';
 import {
-  magicIcon,
   promptIconLight,
   shareIconLight,
   promptIconDark,
@@ -75,9 +74,6 @@ const ActionBar: FC<ActionBarProps> = ({
           <Box style={style}>
             <PromptButton
               size="sm"
-              leftIcon={
-                <Image src={magicIcon} height={19} alt="new component" />
-              }
               title="NEW"
               ariaLabel="new component"
               onClick={() => setInputVisible((prev) => !prev)}
@@ -115,9 +111,6 @@ const ActionBar: FC<ActionBarProps> = ({
           <Box style={style}>
             <PromptButton
               size="sm"
-              leftIcon={
-                <Image src={magicIcon} height={19} alt="new component" />
-              }
               title="MAKE MAGIC"
               ariaLabel="new component"
               onClick={onClick}

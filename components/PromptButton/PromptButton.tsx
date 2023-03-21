@@ -1,5 +1,15 @@
 import { FC, MouseEventHandler, ReactNode } from 'react';
-import { Button, MantineNumberSize, MantineSize, Text } from '@mantine/core';
+import {
+  Button,
+  MantineNumberSize,
+  MantineSize,
+  Text,
+  useMantineColorScheme,
+} from '@mantine/core';
+import Image from 'next/image';
+import { magicIconDark, magicIconLight } from '@/assets';
+import { useStyles } from './styles';
+import { Icon123 } from '@tabler/icons-react';
 
 interface PromptButtonProps {
   title: string;
@@ -9,7 +19,6 @@ interface PromptButtonProps {
   fullWidth?: boolean;
   radius?: MantineNumberSize | undefined;
   size?: MantineSize | undefined;
-  leftIcon?: ReactNode | undefined;
   mt?: MantineSize | undefined;
   width?: any;
   disabled?: boolean;
@@ -23,14 +32,21 @@ const PromptButton: FC<PromptButtonProps> = ({
   radius = '32px',
   size = 'xl',
   fullWidth = true,
-  leftIcon,
   mt,
   width,
   disabled = false,
 }) => {
+  const { classes } = useStyles();
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const magicIcon = isDark ? magicIconDark : magicIconLight;
+
+  const leftIcon = <Image src={magicIcon} height={19} alt="make magic" />;
+
   return (
     <Button
-      color="dark"
+      className={classes.button}
       radius={radius}
       onClick={onClick}
       disabled={disabled}

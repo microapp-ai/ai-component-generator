@@ -24,7 +24,7 @@ import {
   PromptInput,
   HeadSeo,
 } from '@/components';
-import { magicIcon, reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
+import { reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import ActionBar from '@/components/ActionBar';
@@ -240,9 +240,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                     <PromptButton
                       mt="md"
                       title="MAKE MAGIC"
-                      leftIcon={
-                        <Image src={magicIcon} height={19} alt="make magic" />
-                      }
                       onClick={generateTextWithGpt}
                       disabled={isLoading}
                       ariaLabel="generate component"
@@ -271,9 +268,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                     <Box w="22%" ml="xs">
                       <PromptButton
                         title="MAKE MAGIC"
-                        leftIcon={
-                          <Image src={magicIcon} height={19} alt="make magic" />
-                        }
                         onClick={generateTextWithGpt}
                         isLoading={isLoading}
                         ariaLabel="generate component"
