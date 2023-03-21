@@ -115,6 +115,7 @@ const ActionBar: FC<ActionBarProps> = ({
               ariaLabel="new component"
               onClick={onClick}
               width={190}
+              disabled={disabled}
             />
           </Box>
         )}
