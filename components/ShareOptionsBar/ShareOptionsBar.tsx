@@ -96,7 +96,7 @@ const ShareOptionsBar: FC<ShareOptionsBarProps> = ({ id, style }) => {
             'nextjs',
             'tailwindcss',
           ]}
-          title="Check out this React + Tailwind CSS component generated with AI"
+          title="Check out this React + Tailwind CSS component generated with AI @microappai"
           url={shareUrl}
         >
           <Image src={shareTwitterIcon} alt="share it on Twitter" />

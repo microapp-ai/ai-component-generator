@@ -44,7 +44,7 @@ async function handler(req: any, res: any) {
     },
     {
       role: 'user',
-      content: `Create a React functional component + ${library} code for a Button with indigo background, generate text on it. The functional component should not receive any props.`,
+      content: `Create a React functional component + ${library} code for a Button with black background, generate text on it. The functional component should not receive any props.`,
     },
     {
       role: 'assistant',

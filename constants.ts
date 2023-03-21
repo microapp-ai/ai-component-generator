@@ -18,7 +18,7 @@ import React from 'react';
 const MyButton = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <button className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50">Click Me!</button>
+      <button className="rounded-3xl bg-black px-6 py-2 text-xl font-medium uppercase text-white">Click Me!</button>
     </div>
   );
 };
@@ -73,7 +73,7 @@ const MyForm = () => {
           <div>
             <button
               type="submit"
-              className="w-full bg-indigo-500 text-white p-3 rounded-lg font-bold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-opacity-50"
+              className="w-full rounded-3xl bg-black px-6 py-2 text-xl font-medium uppercase text-white"
             >
               Send Message
             </button>
