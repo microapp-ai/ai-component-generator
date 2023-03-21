@@ -34,11 +34,13 @@ import { useRouter } from 'next/router';
 interface HomeProps {
   code: string;
   prompt: string;
+  generated_id: string;
 }
 
 const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   code,
   prompt,
+  generated_id,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -58,6 +60,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
 
   useEffect(() => {
     if (code) {
+      console.log('enters here');
       setData(code);
       setPromptInputValue(prompt);
       setAuxPromptValue(prompt);
@@ -311,7 +314,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 onClick={generateTextWithGpt}
                 inputSize="sm"
                 disabled={isLoading}
-                shareId={codeId}
+                shareId={codeId || generated_id}
                 prompt={auxPromptValue}
               />
             </Flex>
@@ -331,11 +334,15 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
     const { data }: any = await supabase.from('logs').select('*').eq('id', id);
 
     return {
-      props: { code: data[0]?.generated_code, prompt: data[0]?.prompt },
+      props: {
+        code: data[0]?.generated_code,
+        prompt: data[0]?.prompt,
+        generated_id: data[0]?.id,
+      },
     };
   }
 
-  return { props: { code: '', prompt: '' } };
+  return { props: { code: '', prompt: '', generated_id: '' } };
 };
 
 export default Home;
