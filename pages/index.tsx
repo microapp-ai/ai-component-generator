@@ -91,13 +91,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         if (generatedText !== 'No prompt given') {
           setData(generatedText);
           setCodeId(code_id);
-          router.replace(
-            process.env.NODE_ENV === 'production'
-              ? `/build/?id=${code_id}`
-              : `?id=${code_id}`,
-            undefined,
-            { shallow: true }
-          );
+          router.push(`?id=${code_id}`, undefined, { shallow: true });
         }
 
         setTimeout(() => open(), 500);
