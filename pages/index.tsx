@@ -92,9 +92,9 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           setData(generatedText);
           setCodeId(code_id);
           router.replace(
-            {
-              query: { ...router.query, id: code_id },
-            },
+            process.env.NODE_ENV === 'production'
+              ? `/build/?id=${code_id}`
+              : `?id=${code_id}`,
             undefined,
             { shallow: true }
           );
