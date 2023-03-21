@@ -7,6 +7,8 @@ import {
   Tooltip,
   Transition,
   useMantineColorScheme,
+  Text,
+  CopyButton,
 } from '@mantine/core';
 import { PromptButton, PromptInput, ShareOptionsBar } from '@/components';
 import Image from 'next/image';
@@ -18,6 +20,7 @@ import {
   shareIconDark,
 } from '@/assets';
 import { useStyles } from './styles';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 
 interface ActionBarProps {
   value: string;
@@ -58,7 +61,7 @@ const ActionBar: FC<ActionBarProps> = ({
     <Flex
       className={classes.container}
       p="xs"
-      justify="space-between"
+      justify="center"
       align="center"
       gap="sm"
     >
@@ -125,13 +128,42 @@ const ActionBar: FC<ActionBarProps> = ({
       </Transition>
       <Transition
         mounted={isPromptContainerVisible}
-        transition="fade"
+        transition="slide-up"
         duration={400}
         timingFunction="ease"
       >
         {(style) => (
-          <Flex style={style} justify="center" align="center" gap={2}>
-            {prompt}
+          <Flex
+            style={style}
+            justify="center"
+            align="center"
+            gap={4}
+            className={classes.promptContainer}
+          >
+            <Text truncate size={18}>
+              {prompt}
+            </Text>
+            <CopyButton value={prompt} timeout={2000}>
+              {({ copied, copy }) => (
+                <Tooltip
+                  label={copied ? 'Prompt Copied' : 'Copy Prompt'}
+                  withArrow
+                  position="right"
+                >
+                  <ActionIcon
+                    className={classes.promptCopyIconButton}
+                    color={copied ? 'teal' : 'gray'}
+                    onClick={copy}
+                  >
+                    {copied ? (
+                      <IconCheck color="#202123" size="1.2rem" />
+                    ) : (
+                      <IconCopy color="#202123" size="1.2rem" />
+                    )}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
           </Flex>
         )}
       </Transition>

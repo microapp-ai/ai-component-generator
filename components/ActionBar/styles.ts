@@ -15,4 +15,18 @@ export const useStyles = createStyles((theme) => ({
     borderRadius: 20,
     padding: 17,
   },
+
+  promptContainer: {
+    position: 'absolute',
+    top: -65,
+    maxWidth: '100%',
+    borderRadius: 8,
+    padding: 12,
+    backgroundColor: theme.colorScheme === 'dark' ? '#fff' : '#EBEBEB',
+    border: `1px solid ${theme.colorScheme === 'dark' ? '#fff' : '#D9D9D9'}`,
+  },
+
+  promptCopyIconButton: {
+    border: '1px solid #202123',
+  },
 }));

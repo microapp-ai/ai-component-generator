@@ -29,6 +29,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import ActionBar from '@/components/ActionBar';
 import { LOADING_TEXTS } from '@/constants';
+import { useRouter } from 'next/router';
 
 interface HomeProps {
   code: string;
@@ -43,8 +44,9 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [technology] = useState<string>('tailwind');
   const [promptInputValue, setPromptInputValue] = useState('');
+  const [auxPromptValue, setAuxPromptValue] = useState('');
   const [data, setData] = useState<string>(
-    'const MyComponent = () => <div />;'
+    'const MyComponent = () => <button>Hello!</button>; export default MyComponent;'
   );
   const [codeId, setCodeId] = useState<string>('');
   const [_, setCodeWasShown] = useState<boolean>(false);
@@ -52,10 +54,13 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
 
+  const router = useRouter();
+
   useEffect(() => {
     if (code) {
       setData(code);
       setPromptInputValue(prompt);
+      setAuxPromptValue(prompt);
       open();
     }
   }, [code, open, prompt]);
@@ -63,6 +68,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const generateTextWithGpt = async () => {
     if (promptInputValue) {
       setIsLoading(true);
+      setAuxPromptValue(promptInputValue);
       setCodeWasShown(false);
       close();
 
@@ -85,13 +91,22 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         if (generatedText !== 'No prompt given') {
           setData(generatedText);
           setCodeId(code_id);
+          router.replace(
+            {
+              query: { ...router.query, id: code_id },
+            },
+            undefined,
+            { shallow: true }
+          );
         }
 
         setTimeout(() => open(), 500);
         setCodeWasShown(true);
+        setPromptInputValue('');
         setIsLoading(false);
       } catch (e: any) {
         setIsLoading(false);
+        setPromptInputValue('');
       }
     }
   };
@@ -296,7 +311,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 inputSize="sm"
                 disabled={isLoading}
                 shareId={codeId}
-                prompt={prompt}
+                prompt={auxPromptValue}
               />
             </Flex>
           </Container>
