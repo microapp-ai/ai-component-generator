@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { MainLayout } from '@/layouts';
 
 interface LayoutProviderProps {
   children: React.ReactNode;
@@ -8,7 +7,7 @@ interface LayoutProviderProps {
 const LayoutProvider: FC<LayoutProviderProps> = ({
   children,
 }): React.ReactElement => (
-  <MainLayout withFooter={false}>{children}</MainLayout>
+  <>{children}</>
 );
 
 export default LayoutProvider;

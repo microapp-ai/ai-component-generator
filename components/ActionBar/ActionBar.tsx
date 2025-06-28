@@ -10,13 +10,11 @@ import {
   Text,
   CopyButton,
 } from '@mantine/core';
-import { PromptButton, PromptInput, ShareOptionsBar } from '@/components';
+import { PromptButton, PromptInput } from '@/components';
 import Image from 'next/image';
 import {
   promptIconLight,
-  shareIconLight,
   promptIconDark,
-  shareIconDark,
 } from '@/assets';
 import { useStyles } from './styles';
 import { IconCheck, IconCopy } from '@tabler/icons-react';
@@ -29,7 +27,6 @@ interface ActionBarProps {
   inputSize: MantineSize | undefined;
   onClick: () => void;
   disabled: boolean;
-  shareId?: string;
   prompt?: string;
 }
 
@@ -41,19 +38,17 @@ const ActionBar: FC<ActionBarProps> = ({
   inputSize,
   onClick,
   disabled,
-  shareId = '',
   prompt = '',
 }) => {
   const { classes } = useStyles();
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
-  const [areShareOptionsVisible, setShareOptionsVisible] =
-    useState<boolean>(false);
+
   const [isPromptContainerVisible, setPromptContainerVisible] =
     useState<boolean>(false);
 
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
-  const shareIcon = isDark ? shareIconDark : shareIconLight;
+
   const promptIcon = isDark ? promptIconDark : promptIconLight;
 
   return (
@@ -176,31 +171,7 @@ const ActionBar: FC<ActionBarProps> = ({
           <Image src={promptIcon} alt="prompt" />
         </ActionIcon>
       </Tooltip>
-      <Transition
-        mounted={!areShareOptionsVisible}
-        transition="fade"
-        duration={100}
-        timingFunction="ease"
-      >
-        {(style) => (
-          <ActionIcon
-            style={style}
-            className={classes.icon}
-            onClick={() => setShareOptionsVisible((prev) => !prev)}
-            disabled={disabled}
-          >
-            <Image src={shareIcon} alt="share" />
-          </ActionIcon>
-        )}
-      </Transition>
-      <Transition
-        mounted={areShareOptionsVisible}
-        transition="fade"
-        duration={400}
-        timingFunction="ease"
-      >
-        {(style) => <ShareOptionsBar style={style} id={shareId} />}
-      </Transition>
+
     </Flex>
   );
 };

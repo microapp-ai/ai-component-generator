@@ -22,7 +22,6 @@ import {
   LoadingTextChanger,
   PromptButton,
   PromptInput,
-  HeadSeo,
 } from '@/components';
 import { reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
@@ -59,13 +58,14 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const router = useRouter();
 
   useEffect(() => {
-    if (code) {
+    if (code && generated_id) {
+      // Only open the preview if we have a real generated_id (not empty string)
       setData(code);
       setPromptInputValue(prompt);
       setAuxPromptValue(prompt);
       open();
     }
-  }, [code, open, prompt]);
+  }, [code, open, prompt, generated_id]);
 
   const generateTextWithGpt = async () => {
     if (promptInputValue) {
@@ -119,7 +119,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
 
   return (
     <>
-      <HeadSeo />
       <Box component="main" w="100%" h="100%">
         <Transition
           mounted={!opened}
@@ -317,7 +316,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                 onClick={generateTextWithGpt}
                 inputSize="sm"
                 disabled={isLoading}
-                shareId={codeId || generated_id}
                 prompt={auxPromptValue}
               />
             </Flex>
