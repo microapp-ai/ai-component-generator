@@ -22,6 +22,7 @@ import {
   LoadingTextChanger,
   PromptButton,
   PromptInput,
+  Sidebar,
 } from '@/components';
 import { reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
@@ -50,6 +51,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const [adjustmentPrompt, setAdjustmentPrompt] = useState('');
   const [isAdjusting, setIsAdjusting] = useState(false);
   const [componentHistory, setComponentHistory] = useState<{prompt: string; code: string; timestamp: Date}[]>([]);
+  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(false);
   const [data, setData] = useState<string>(
     'const MyComponent = () => <button>Hello!</button>; export default MyComponent;'
   );
@@ -191,7 +193,21 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
 
   return (
     <>
-      <Box component="main" w="100%" h="100%">
+      {/* Sidebar */}
+      <Sidebar 
+        expanded={sidebarExpanded} 
+        onToggle={() => setSidebarExpanded(!sidebarExpanded)} 
+      />
+      
+      <Box 
+        component="main" 
+        w="100%" 
+        h="100%"
+        sx={{
+          marginLeft: sidebarExpanded ? '240px' : '60px',
+          transition: 'margin-left 0.3s ease',
+        }}
+      >
         <Transition
           mounted={!opened}
           transition="fade"

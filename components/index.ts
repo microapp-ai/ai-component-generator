@@ -9,3 +9,4 @@ export { default as ShareOptionsBar } from './ShareOptionsBar';
 export { default as PromptButton } from './PromptButton';
 export { default as PromptInput } from './PromptInput';
 export { default as TypeWriter } from './TypeWriter';
+export { default as Sidebar } from './Sidebar';
