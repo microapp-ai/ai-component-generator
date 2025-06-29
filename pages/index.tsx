@@ -128,16 +128,30 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         >
           {(style) => (
             <Box style={style} mt={50}>
-              <Title order={1} align="center" weight="bold" size={42}>
+              <Title 
+                order={1} 
+                align="center" 
+                weight={700} 
+                size={48}
+                sx={(theme) => ({
+                  color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+                  letterSpacing: '-0.5px',
+                  fontFamily: '"Inter", sans-serif',
+                })}
+              >
                 AI-Powered Component Generator
               </Title>
               <Title
-                mt={20}
+                mt={16}
                 order={2}
                 align="center"
                 weight={400}
-                size={26}
-                color="#6F7175"
+                size={20}
+                sx={(theme) => ({
+                  color: theme.colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.gray[6],
+                  lineHeight: 1.5,
+                  fontFamily: '"Inter", sans-serif',
+                })}
               >
                 Create and preview <Image src={reactLogo} alt="react" />{' '}
                 <Text span color={isDark ? '#fff' : '#202123'} weight={600}>
@@ -230,7 +244,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           )}
         </Collapse>
 
-        <Container size="sm" fluid mt={40}>
+        <Container size="md" mt={60} mb={40}>
           <Transition
             mounted={!opened && !isLoading}
             transition="fade"
@@ -239,54 +253,98 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           >
             {(style) => (
               <Box style={style}>
-                <MediaQuery largerThan="md" styles={{ display: 'none' }}>
-                  <Flex justify="center" align="center" direction="column">
+                <Box
+                  sx={(theme) => ({
+                    maxWidth: '700px',
+                    margin: '0 auto',
+                    position: 'relative',
+                  })}
+                >
+                  <Box sx={{ position: 'relative' }}>
                     <PromptInput
                       value={promptInputValue}
                       onChange={setPromptInputValue}
-                      placeholder="e.g a tip calculator"
+                      placeholder="Ask anything"
                       onKeyDown={getHotkeyHandler([
                         ['Enter', generateTextWithGpt],
                       ])}
+                      size="md"
+                      radius="xl"
+                      autoFocus
                     />
-                    <PromptButton
-                      mt="md"
-                      title="MAKE MAGIC"
-                      onClick={generateTextWithGpt}
-                      disabled={isLoading}
-                      ariaLabel="generate component"
-                    />
-                  </Flex>
-                </MediaQuery>
-
-                <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
-                  <Flex
-                    justify="center"
-                    align="flex-end"
-                    p="md"
-                    sx={{ border: '1px solid #D9D9D9', borderRadius: 120 }}
-                  >
-                    <Box w="78%">
-                      <PromptInput
-                        value={promptInputValue}
-                        onChange={setPromptInputValue}
-                        placeholder="e.g a tip calculator"
-                        onKeyDown={getHotkeyHandler([
-                          ['Enter', generateTextWithGpt],
-                        ])}
-                      />
-                    </Box>
-
-                    <Box w="22%" ml="xs">
+                    
+                    <Box sx={{ position: 'absolute', right: '12px', bottom: '12px' }}>
                       <PromptButton
-                        title="MAKE MAGIC"
                         onClick={generateTextWithGpt}
-                        isLoading={isLoading}
+                        disabled={isLoading}
                         ariaLabel="generate component"
+                        radius="xl"
+                        iconSize={18}
                       />
                     </Box>
-                  </Flex>
-                </MediaQuery>
+                  </Box>
+                </Box>
+                
+                {/* Examples section */}
+                <Box mt={30} sx={(theme) => ({
+                  maxWidth: '700px',
+                  margin: '0 auto',
+                })}>
+                  <Text 
+                    size="sm" 
+                    mb={16} 
+                    sx={(theme) => ({
+                      color: theme.colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.gray[6],
+                      fontFamily: '"Inter", sans-serif',
+                      fontWeight: 500,
+                      letterSpacing: '0.3px',
+                    })}
+                  >
+                    Examples
+                  </Text>
+                  <Box sx={(theme) => ({
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                    gap: '12px',
+                  })}>
+                    {[
+                      'a responsive pricing table with 3 tiers',
+                      'a dark mode toggle switch with animation',
+                      'a testimonial carousel with avatar images',
+                      'a contact form with validation',
+                      'a product card with hover effects'
+                    ].map((example, index) => (
+                      <Box 
+                        key={index} 
+                        onClick={() => {
+                          setPromptInputValue(example);
+                        }}
+                        sx={(theme) => ({
+                          padding: '12px 16px',
+                          cursor: 'pointer',
+                          borderRadius: theme.radius.md,
+                          border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]}`,
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                            transform: 'translateY(-2px)',
+                            boxShadow: theme.colorScheme === 'dark' ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.05)',
+                          }
+                        })}
+                      >
+                        <Text 
+                          size="sm" 
+                          sx={(theme) => ({
+                            fontFamily: '"Inter", sans-serif',
+                            color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+                          })}
+                        >
+                          {example}
+                        </Text>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
               </Box>
             )}
           </Transition>
@@ -303,7 +361,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           <Container
             w="100%"
             size="lg"
-            mb="sm"
+            mb="md"
             style={style}
             sx={{ position: 'fixed', bottom: 0, zIndex: 999 }}
           >
@@ -311,10 +369,10 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
               <ActionBar
                 value={promptInputValue}
                 onChange={setPromptInputValue}
-                placeholder="e.g a tip calculator"
+                placeholder="Ask anything"
                 onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
                 onClick={generateTextWithGpt}
-                inputSize="sm"
+                inputSize="md"
                 disabled={isLoading}
                 prompt={auxPromptValue}
               />

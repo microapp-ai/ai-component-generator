@@ -3,16 +3,15 @@ import {
   Button,
   MantineNumberSize,
   MantineSize,
-  Text,
   useMantineColorScheme,
+  Box,
+  Center,
 } from '@mantine/core';
-import Image from 'next/image';
-import { magicIconDark, magicIconLight } from '@/assets';
+import { IconArrowRight } from '@tabler/icons-react';
 import { useStyles } from './styles';
-import { Icon123 } from '@tabler/icons-react';
 
 interface PromptButtonProps {
-  title: string;
+  title?: string;
   ariaLabel: string;
   onClick: MouseEventHandler<HTMLButtonElement> | undefined;
   isLoading?: boolean;
@@ -22,6 +21,7 @@ interface PromptButtonProps {
   mt?: MantineSize | undefined;
   width?: any;
   disabled?: boolean;
+  iconSize?: number;
 }
 
 const PromptButton: FC<PromptButtonProps> = ({
@@ -29,39 +29,65 @@ const PromptButton: FC<PromptButtonProps> = ({
   ariaLabel,
   onClick,
   isLoading = false,
-  radius = '32px',
-  size = 'xl',
-  fullWidth = true,
+  radius = 'md',
+  size = 'md',
+  fullWidth = false,
   mt,
   width,
   disabled = false,
+  iconSize = 20,
 }) => {
   const { classes } = useStyles();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const magicIcon = isDark ? magicIconDark : magicIconLight;
-
-  const leftIcon = <Image src={magicIcon} height={19} alt="make magic" />;
-
   return (
-    <Button
-      className={classes.button}
-      radius={radius}
-      onClick={onClick}
-      disabled={disabled}
-      fullWidth={fullWidth}
-      size={size}
-      aria-label={ariaLabel}
-      leftIcon={leftIcon}
-      mt={mt}
-      w={width}
-      loading={isLoading}
+    <Box
+      sx={(theme) => ({
+        position: 'relative',
+        borderRadius: theme.radius.xl,
+        padding: '3px', // Thicker border
+        background: 'linear-gradient(90deg, #FF6B6B, #FFD166, #06D6A0, #118AB2, #073B4C, #7209B7, #F72585)',
+        width: fullWidth ? '100%' : width || 'auto',
+        display: 'inline-block',
+        marginTop: mt,
+        opacity: disabled ? 0.7 : 1,
+      })}
     >
-      <Text size={20} weight={600}>
-        {title}
-      </Text>
-    </Button>
+      <Button
+        radius={radius}
+        onClick={onClick}
+        disabled={disabled}
+        fullWidth={true}
+        size={size}
+        aria-label={ariaLabel}
+        loading={isLoading}
+        sx={(theme) => ({
+          height: '36px',
+          width: '36px',
+          minWidth: '36px',
+          backgroundColor: isDark ? '#202123' : '#FFFFFF',
+          color: isDark ? '#FFFFFF' : '#202123',
+          border: 'none',
+          boxShadow: 'none',
+          transition: 'all 0.2s ease',
+          padding: 0,
+          borderRadius: theme.radius.xl,
+          '&:hover': {
+            backgroundColor: isDark ? '#2D2D2D' : '#F8F8F8',
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1))',
+          },
+          '&:disabled': {
+            backgroundColor: isDark ? '#202123' : '#FFFFFF',
+            color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
+          },
+        })}
+      >
+        <Center>
+          <IconArrowRight size={iconSize} stroke={1.5} />
+        </Center>
+      </Button>
+    </Box>
   );
 };
 

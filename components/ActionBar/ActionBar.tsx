@@ -9,6 +9,7 @@ import {
   useMantineColorScheme,
   Text,
   CopyButton,
+  Paper,
 } from '@mantine/core';
 import { PromptButton, PromptInput } from '@/components';
 import Image from 'next/image';
@@ -17,7 +18,7 @@ import {
   promptIconDark,
 } from '@/assets';
 import { useStyles } from './styles';
-import { IconCheck, IconCopy } from '@tabler/icons-react';
+import { IconCheck, IconCopy, IconPlus } from '@tabler/icons-react';
 
 interface ActionBarProps {
   value: string;
@@ -42,137 +43,157 @@ const ActionBar: FC<ActionBarProps> = ({
 }) => {
   const { classes } = useStyles();
   const [isInputVisible, setInputVisible] = useState<boolean>(false);
-
-  const [isPromptContainerVisible, setPromptContainerVisible] =
-    useState<boolean>(false);
-
+  const [isPromptContainerVisible, setPromptContainerVisible] = useState<boolean>(false);
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const promptIcon = isDark ? promptIconDark : promptIconLight;
-
   return (
-    <Flex
-      className={classes.container}
-      p="xs"
-      justify="center"
-      align="center"
-      gap="sm"
+    <Paper
+      p="md"
+      radius="md"
+      sx={(theme) => ({
+        backgroundColor: isDark ? theme.colors.dark[7] : theme.white,
+        border: `1px solid ${isDark ? theme.colors.dark[5] : theme.colors.gray[2]}`,
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
+      })}
     >
-      <Transition
-        mounted={!isInputVisible}
-        transition="fade"
-        duration={200}
-        timingFunction="ease"
+      <Flex
+        justify="center"
+        align="center"
+        gap="md"
       >
-        {(style) => (
-          <Box style={style}>
-            <PromptButton
-              size="sm"
-              title="NEW"
-              ariaLabel="new component"
-              onClick={() => setInputVisible((prev) => !prev)}
-              width={120}
+        <Transition
+          mounted={!isInputVisible}
+          transition="fade"
+          duration={200}
+          timingFunction="ease"
+        >
+          {(style) => (
+            <Box style={style}>
+              <PromptButton
+                size="md"
+                title="New Component"
+                ariaLabel="new component"
+                onClick={() => setInputVisible((prev) => !prev)}
+                width={150}
+                disabled={disabled}
+                radius="md"
+              />
+            </Box>
+          )}
+        </Transition>
+        <Transition
+          mounted={isInputVisible}
+          transition="fade"
+          duration={400}
+          timingFunction="ease"
+        >
+          {(style) => (
+            <Box w={500} style={style}>
+              <PromptInput
+                value={value}
+                onChange={onChange}
+                placeholder={placeholder}
+                onKeyDown={onKeyDown}
+                size={inputSize}
+                radius="md"
+              />
+            </Box>
+          )}
+        </Transition>
+        <Transition
+          mounted={isInputVisible}
+          transition="fade"
+          duration={400}
+          timingFunction="ease"
+        >
+          {(style) => (
+            <Box style={style}>
+              <PromptButton
+                size="md"
+                title="Generate"
+                ariaLabel="generate component"
+                onClick={onClick}
+                width={120}
+                disabled={disabled}
+                radius="md"
+              />
+            </Box>
+          )}
+        </Transition>
+        
+        {prompt && (
+          <Tooltip label={isPromptContainerVisible ? "Hide prompt" : "Show prompt"} withArrow position="top">
+            <ActionIcon
+              onClick={() => setPromptContainerVisible((prev) => !prev)}
               disabled={disabled}
-            />
-          </Box>
+              size="md"
+              radius="md"
+              sx={(theme) => ({
+                border: `1px solid ${isDark ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: isDark ? theme.colors.dark[6] : theme.colors.gray[0],
+                },
+              })}
+            >
+              <IconCopy size="1rem" stroke={1.5} />
+            </ActionIcon>
+          </Tooltip>
         )}
-      </Transition>
+      </Flex>
+      
       <Transition
-        mounted={isInputVisible}
-        transition="fade"
-        duration={400}
-        timingFunction="ease"
-      >
-        {(style) => (
-          <Box w={500} style={style}>
-            <PromptInput
-              value={value}
-              onChange={onChange}
-              placeholder={placeholder}
-              onKeyDown={onKeyDown}
-              size={inputSize}
-            />
-          </Box>
-        )}
-      </Transition>
-      <Transition
-        mounted={isInputVisible}
-        transition="fade"
-        duration={400}
-        timingFunction="ease"
-      >
-        {(style) => (
-          <Box style={style}>
-            <PromptButton
-              size="sm"
-              title="MAKE MAGIC"
-              ariaLabel="new component"
-              onClick={onClick}
-              width={190}
-              disabled={disabled}
-            />
-          </Box>
-        )}
-      </Transition>
-      <Transition
-        mounted={isPromptContainerVisible}
+        mounted={isPromptContainerVisible && !!prompt}
         transition="slide-up"
-        duration={400}
+        duration={300}
         timingFunction="ease"
       >
         {(style) => (
-          <Flex
+          <Box
+            mt="md"
+            p="sm"
             style={style}
-            justify="center"
-            align="center"
-            gap={4}
-            className={classes.promptContainer}
+            sx={(theme) => ({
+              backgroundColor: isDark ? theme.colors.dark[6] : theme.colors.gray[0],
+              borderRadius: theme.radius.sm,
+              border: `1px solid ${isDark ? theme.colors.dark[4] : theme.colors.gray[2]}`,
+            })}
           >
-            <Text truncate size={18} className={classes.promptText}>
+            <Flex justify="space-between" align="center">
+              <Text size="sm" sx={(theme) => ({
+                color: isDark ? theme.colors.gray[4] : theme.colors.gray[6]
+              })}>
+                Prompt used:
+              </Text>
+              <CopyButton value={prompt} timeout={2000}>
+                {({ copied, copy }) => (
+                  <Tooltip label={copied ? 'Copied' : 'Copy prompt'} withArrow position="top">
+                    <ActionIcon
+                      size="sm"
+                      onClick={copy}
+                      sx={(theme) => ({
+                        backgroundColor: 'transparent',
+                        '&:hover': {
+                          backgroundColor: isDark ? theme.colors.dark[5] : theme.colors.gray[1],
+                        },
+                      })}
+                    >
+                      {copied ? <IconCheck size="0.9rem" /> : <IconCopy size="0.9rem" />}
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </CopyButton>
+            </Flex>
+            <Text mt={5} size="sm" sx={(theme) => ({
+              color: isDark ? theme.white : theme.black
+            })}>
               {prompt}
             </Text>
-            <CopyButton value={prompt} timeout={2000}>
-              {({ copied, copy }) => (
-                <Tooltip
-                  label={copied ? 'Prompt Copied' : 'Copy Prompt'}
-                  withArrow
-                  position="right"
-                >
-                  <ActionIcon
-                    className={classes.promptCopyIconButton}
-                    color={copied ? 'teal' : 'gray'}
-                    onClick={copy}
-                  >
-                    {copied ? (
-                      <IconCheck
-                        color={isDark ? '#FDFDFD' : '#202123'}
-                        size="1.2rem"
-                      />
-                    ) : (
-                      <IconCopy
-                        color={isDark ? '#FDFDFD' : '#202123'}
-                        size="1.2rem"
-                      />
-                    )}
-                  </ActionIcon>
-                </Tooltip>
-              )}
-            </CopyButton>
-          </Flex>
+          </Box>
         )}
       </Transition>
-      <Tooltip label="See & copy prompt" withArrow position="top">
-        <ActionIcon
-          className={classes.icon}
-          onClick={() => setPromptContainerVisible((prev) => !prev)}
-          disabled={disabled}
-        >
-          <Image src={promptIcon} alt="prompt" />
-        </ActionIcon>
-      </Tooltip>
-
-    </Flex>
+    </Paper>
   );
 };
 
