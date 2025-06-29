@@ -5,9 +5,10 @@ import {
   Container,
   useMantineColorScheme,
   Text,
+  Box,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { ColorSchemeToggle, Logo } from '@/components';
+import { Logo } from '@/components';
 import { useStyles } from './styles';
 
 const NavBar: FC = () => {
@@ -18,7 +19,7 @@ const NavBar: FC = () => {
 
   return (
     <>
-      <Header height={56} className={classes.header} fixed>
+      <Header height={72} className={classes.header} fixed>
         <Container size="xl" className={classes.inner}>
           <Group>
             <a href="https://www.microapp.ai" rel="noopener">
@@ -26,26 +27,31 @@ const NavBar: FC = () => {
             </a>
           </Group>
 
-          <Group>
+          <Group spacing={24}>
             <a
               href="https://www.microapp.ai/about"
               style={{ textDecoration: 'none' }}
             >
-              <Text size={16} weight={600} color={isDark ? '#fff' : '#202123'}>
+              <Text 
+                size={16} 
+                weight={500} 
+                color={isDark ? '#fff' : '#202123'}
+                className={classes.navLink}
+              >
                 About
               </Text>
             </a>
             <Text
               color={isDark ? '#fff' : '#202123'}
               size={16}
-              weight={600}
-              sx={{ textDecoration: 'none' }}
+              weight={500}
+              className={classes.navLink}
               component="a"
               href="mailto:invest@microapp.ai?subject=Hi - Microapp.ai"
             >
               Contact Us
             </Text>
-            <ColorSchemeToggle />
+
           </Group>
         </Container>
       </Header>

@@ -14,7 +14,6 @@ import {
   MediaQuery,
 } from '@mantine/core';
 import Image from 'next/image';
-import { Sandpack } from '@codesandbox/sandpack-react';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
 import { IconCheck, IconCopy } from '@tabler/icons-react';
 import Lottie from 'lottie-react';
@@ -27,6 +26,7 @@ import { reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import ActionBar from '@/components/ActionBar';
+import CodePlayground from '@/components/CodePlayground';
 import { LOADING_TEXTS } from '@/constants';
 import { useRouter } from 'next/router';
 
@@ -185,66 +185,42 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           )}
         </Transition>
 
-        <Collapse
-          mt="xl"
-          transitionDuration={400}
-          transitionTimingFunction="linear"
-          in={opened}
+        <Box
           sx={{
-            position: 'relative',
+            display: opened ? 'block' : 'none',
+            height: 'calc(100vh - 120px)',
+            width: '68%',
+            position: 'fixed',
+            top: '20px',
+            right: '16px',
+            zIndex: 100,
+            padding: '0',
+            borderLeft: '1px solid #eaeaea',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+            marginBottom: '20px',
           }}
         >
-          <Box sx={{ position: 'absolute', top: 5, right: 15, zIndex: 999 }}>
-            <CopyButton value={data} timeout={2000}>
-              {({ copied, copy }) => (
-                <Tooltip
-                  label={copied ? 'Code Copied' : 'Copy Code'}
-                  withArrow
-                  position="right"
-                >
-                  <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                    {copied ? (
-                      <IconCheck size="1rem" />
-                    ) : (
-                      <IconCopy size="1rem" />
-                    )}
-                  </ActionIcon>
-                </Tooltip>
-              )}
-            </CopyButton>
-          </Box>
+          <CodePlayground 
+            code={data} 
+            title={auxPromptValue}
+            externalResources={['https://cdn.tailwindcss.com']}
+          />
+        </Box>
 
-          {data && typeof data === 'string' && data.trim() !== '' ? (
-            <Sandpack
-              key="1"
-              template="react"
-              theme={colorScheme}
-              options={{
-                rtl: true,
-                showTabs: false,
-                showInlineErrors: false,
-                showLineNumbers: false,
-                closableTabs: false,
-                externalResources: ['https://cdn.tailwindcss.com'],
-                editorHeight: 'calc(100vh - 250px)',
-              }}
-              files={{
-                '/App.js': data,
-              }}
-              customSetup={{
-                dependencies: {
-                  'date-fns': '2.29.3',
-                },
-              }}
-            />
-          ) : (
-            <Box p="md" bg="#f8d7da" style={{ borderRadius: 8, color: '#721c24', border: '1px solid #f5c6cb' }}>
-              Unable to render code preview. Please check your input or try again.
-            </Box>
-          )}
-        </Collapse>
-
-        <Container size="md" mt={60} mb={40}>
+        <Container 
+          size="md" 
+          mt={20} 
+          mb={40}
+          sx={{
+            width: opened ? '28%' : '100%',
+            transition: 'all 0.3s ease',
+            paddingRight: opened ? '0' : undefined,
+            marginLeft: opened ? '16px' : 'auto',
+            marginRight: opened ? '0' : 'auto',
+          }}
+        >
           <Transition
             mounted={!opened && !isLoading}
             transition="fade"

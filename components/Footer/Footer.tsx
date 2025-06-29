@@ -4,6 +4,7 @@ import {
   Container,
   Flex,
   useMantineColorScheme,
+  Box,
 } from '@mantine/core';
 import { Logo } from '@/components';
 import Image from 'next/image';
@@ -19,7 +20,13 @@ const Footer = () => {
     <footer className={classes.footer}>
       <Container className={classes.afterFooter}>
         <Flex align="center" justify="flex-start">
-          <Text weight="bold" size="sm" mr="md">
+          <Text 
+            weight={500} 
+            size="sm" 
+            mr="md"
+            className={classes.footerText}
+            color={isDark ? '#fff' : '#202123'}
+          >
             © 2023 Microapp.ai
           </Text>
         </Flex>
@@ -28,12 +35,16 @@ const Footer = () => {
           <Logo />
         </Flex>
 
-        <Group spacing={10} className={classes.social} position="right" noWrap>
+        <Group spacing={24} className={classes.social} position="right" noWrap>
           <a
             href="https://www.microapp.ai/about"
             style={{ textDecoration: 'none' }}
           >
-            <Text size="sm" className={classes.link}>
+            <Text 
+              size="sm" 
+              className={classes.link}
+              color={isDark ? '#fff' : '#202123'}
+            >
               About Us
             </Text>
           </a>
@@ -44,19 +55,21 @@ const Footer = () => {
             <Text
               size="sm"
               className={classes.link}
-              sx={{ textDecoration: 'none' }}
+              color={isDark ? '#fff' : '#202123'}
             >
               Contact Us
             </Text>
           </a>
-          <a target="_blank" href="https://twitter.com/microappai">
-            <Image
-              src={isDark ? twitterIcon : twitterIconDark}
-              width={35}
-              height={35}
-              alt="twitter"
-            />
-          </a>
+          <Box sx={{ marginLeft: 8 }}>
+            <a target="_blank" href="https://twitter.com/microappai">
+              <Image
+                src={isDark ? twitterIcon : twitterIconDark}
+                width={28}
+                height={28}
+                alt="twitter"
+              />
+            </a>
+          </Box>
         </Group>
       </Container>
     </footer>

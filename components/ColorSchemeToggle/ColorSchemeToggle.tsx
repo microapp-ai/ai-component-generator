@@ -10,13 +10,14 @@ const ColorSchemeToggle = () => {
     <Group position="center">
       <ActionIcon
         onClick={() => toggleColorScheme()}
-        size="lg"
+        size="md"
         className={classes.iconContainer}
+        radius="xl"
       >
         {colorScheme === 'dark' ? (
-          <IconSunFilled color="white" size={15} stroke={1.5} />
+          <IconSunFilled color="white" size={16} stroke={1.5} />
         ) : (
-          <IconMoonFilled style={{ color: '#202123' }} size={18} stroke={1.5} />
+          <IconMoonFilled style={{ color: '#202123' }} size={16} stroke={1.5} />
         )}
       </ActionIcon>
     </Group>

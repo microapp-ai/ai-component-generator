@@ -6,9 +6,17 @@ import {
   useMantineColorScheme,
   Box,
   Center,
+  keyframes,
 } from '@mantine/core';
 import { IconArrowRight } from '@tabler/icons-react';
 import { useStyles } from './styles';
+
+// Define the gradient animation keyframes
+const gradientMove = keyframes({
+  '0%': { backgroundPosition: '0% 50%' },
+  '50%': { backgroundPosition: '100% 50%' },
+  '100%': { backgroundPosition: '0% 50%' },
+});
 
 interface PromptButtonProps {
   title?: string;
@@ -46,12 +54,19 @@ const PromptButton: FC<PromptButtonProps> = ({
       sx={(theme) => ({
         position: 'relative',
         borderRadius: theme.radius.xl,
-        padding: '3px', // Thicker border
+        padding: '3px', // Border thickness
         background: 'linear-gradient(90deg, #FF6B6B, #FFD166, #06D6A0, #118AB2, #073B4C, #7209B7, #F72585)',
+        backgroundSize: '300% 300%',
         width: fullWidth ? '100%' : width || 'auto',
         display: 'inline-block',
         marginTop: mt,
         opacity: disabled ? 0.7 : 1,
+        transition: 'all 0.3s ease',
+        animation: `${gradientMove} 6s ease infinite`,
+        '&:hover': {
+          animation: `${gradientMove} 3s ease infinite`,
+          boxShadow: '0 0 8px rgba(255, 255, 255, 0.2)',
+        },
       })}
     >
       <Button
@@ -74,8 +89,7 @@ const PromptButton: FC<PromptButtonProps> = ({
           padding: 0,
           borderRadius: theme.radius.xl,
           '&:hover': {
-            backgroundColor: isDark ? '#2D2D2D' : '#F8F8F8',
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1))',
+            backgroundColor: isDark ? '#2A2A2D' : '#F8F8F8', // Subtle shade change instead of blue
           },
           '&:disabled': {
             backgroundColor: isDark ? '#202123' : '#FFFFFF',

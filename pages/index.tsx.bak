@@ -1,0 +1,33 @@
+import { FC, useEffect, useState } from 'react';
+import {
+  Flex,
+  Box,
+  Text,
+  Title,
+  Collapse,
+  useMantineColorScheme,
+  Container,
+  ActionIcon,
+  Transition,
+  CopyButton,
+  Tooltip,
+  MediaQuery,
+  SegmentedControl,
+  Group,
+} from '@mantine/core';
+import Image from 'next/image';
+import { Sandpack, SandpackCodeEditor, SandpackPreview } from '@codesandbox/sandpack-react';
+import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
+import { IconCheck, IconCopy, IconCode, IconEye } from '@tabler/icons-react';
+import Lottie from 'lottie-react';
+import {
+  LoadingTextChanger,
+  PromptButton,
+  PromptInput,
+} from '@/components';
+import { reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
+import { supabase } from '@/lib/supabaseClient';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import ActionBar from '@/components/ActionBar';
+import { LOADING_TEXTS } from '@/constants';
+import { useRouter } from 'next/router';
