@@ -11,11 +11,12 @@ import {
   Transition,
   CopyButton,
   Tooltip,
+  Autocomplete,
   MediaQuery,
 } from '@mantine/core';
 import Image from 'next/image';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
-import { IconCheck, IconCopy } from '@tabler/icons-react';
+import { IconCheck, IconCopy, IconArrowRight } from '@tabler/icons-react';
 import Lottie from 'lottie-react';
 import {
   LoadingTextChanger,
@@ -46,6 +47,9 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const [technology] = useState<string>('tailwind');
   const [promptInputValue, setPromptInputValue] = useState('');
   const [auxPromptValue, setAuxPromptValue] = useState('');
+  const [adjustmentPrompt, setAdjustmentPrompt] = useState('');
+  const [isAdjusting, setIsAdjusting] = useState(false);
+  const [componentHistory, setComponentHistory] = useState<{prompt: string; code: string; timestamp: Date}[]>([]);
   const [data, setData] = useState<string>(
     'const MyComponent = () => <button>Hello!</button>; export default MyComponent;'
   );
@@ -102,6 +106,16 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           console.log('Setting generated code:', generatedText);
           setData(generatedText);
           setCodeId(code_id);
+          
+          // Add to component history
+          setComponentHistory(prev => [
+            ...prev,
+            {
+              prompt: promptInputValue,
+              code: generatedText,
+              timestamp: new Date()
+            }
+          ]);
         }
 
         setTimeout(() => open(), 500);
@@ -114,6 +128,64 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         setIsLoading(false);
         setPromptInputValue('');
       }
+    }
+  };
+
+  const adjustComponentWithGpt = async () => {
+    if (!adjustmentPrompt) return;
+    
+    setIsAdjusting(true);
+    
+    try {
+      console.log('Sending adjustment request with prompt:', adjustmentPrompt);
+      const response = await fetch(
+        process.env.NODE_ENV === 'production'
+          ? 'https://ai-component-generator-delta.vercel.app/api/magic'
+          : '/api/magic',
+        {
+          method: 'POST',
+          body: JSON.stringify({ 
+            text: `${auxPromptValue}. Now, make the following adjustments: ${adjustmentPrompt}`,
+            technology,
+            currentCode: data
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const responseJson = await response.json();
+      console.log('API Response for adjustment:', responseJson);
+      
+      const { response: generatedText, code_id, error } = responseJson;
+
+      if (error) {
+        console.error('API Error:', error);
+        alert(`Error: ${error}`);
+      } else if (generatedText !== 'No prompt given') {
+        console.log('Setting adjusted code:', generatedText);
+        setData(generatedText);
+        setCodeId(code_id);
+        setAuxPromptValue(`${auxPromptValue} with adjustments: ${adjustmentPrompt}`);
+        
+        // Add to component history
+        setComponentHistory(prev => [
+          ...prev,
+          {
+            prompt: `${auxPromptValue} with adjustments: ${adjustmentPrompt}`,
+            code: generatedText,
+            timestamp: new Date()
+          }
+        ]);
+      }
+      
+      setAdjustmentPrompt('');
+    } catch (error) {
+      console.error('Error during adjustment:', error);
+      alert('Error adjusting component. Please try again.');
+    } finally {
+      setIsAdjusting(false);
     }
   };
 
@@ -185,40 +257,166 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           )}
         </Transition>
 
-        <Box
-          sx={{
-            display: opened ? 'block' : 'none',
-            height: 'calc(100vh - 120px)',
-            width: '68%',
-            position: 'fixed',
-            top: '20px',
-            right: '16px',
-            zIndex: 100,
-            padding: '0',
-            borderLeft: '1px solid #eaeaea',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-            marginBottom: '20px',
-          }}
-        >
-          <CodePlayground 
-            code={data} 
-            title={auxPromptValue}
-            externalResources={['https://cdn.tailwindcss.com']}
-          />
-        </Box>
+        <Flex sx={{ display: opened ? 'flex' : 'none', height: 'calc(100vh - 120px)', position: 'fixed', top: '20px', right: '16px', left: '16px', zIndex: 100 }}>
+          {/* History Panel */}
+          <Box
+            sx={(theme) => ({
+              width: '25%',
+              marginRight: '16px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+              border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+            })}
+          >
+            <Box
+              sx={(theme) => ({
+                padding: '12px 16px',
+                borderBottom: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+              })}
+            >
+              <Text weight={600} size="sm">Component History</Text>
+            </Box>
+            
+            <Box sx={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
+              {componentHistory.length === 0 ? (
+                <Text color="dimmed" size="sm" align="center" mt={20}>
+                  No history yet. Generate a component to see history.
+                </Text>
+              ) : (
+                componentHistory.map((item, index) => (
+                  <Box
+                    key={index}
+                    sx={(theme) => ({
+                      padding: '12px',
+                      marginBottom: '8px',
+                      borderRadius: theme.radius.md,
+                      border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+                      },
+                    })}
+                    onClick={() => {
+                      setData(item.code);
+                      setAuxPromptValue(item.prompt);
+                    }}
+                  >
+                    <Text size="xs" color="dimmed" mb={4}>
+                      {item.timestamp.toLocaleTimeString()}
+                    </Text>
+                    <Text size="sm" lineClamp={2}>
+                      {item.prompt}
+                    </Text>
+                  </Box>
+                )))
+              }
+            </Box>
+            
+            {/* Adjustment Prompt Input */}
+            <Box
+              sx={(theme) => ({
+                padding: '12px',
+                borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+              })}
+            >
+              <Box sx={{ position: 'relative' }}>
+                <Autocomplete
+                  radius="xl"
+                  size="md"
+                  w="100%"
+                  value={adjustmentPrompt}
+                  onChange={setAdjustmentPrompt}
+                  placeholder="Adjust component..."
+                  data={[]}
+                  onKeyDown={getHotkeyHandler([['Enter', adjustComponentWithGpt]])}
+                  styles={(theme) => ({
+                    root: {
+                      position: 'relative',
+                    },
+                    input: {
+                      height: '50px',
+                      fontSize: '14px',
+                      paddingLeft: '16px',
+                      paddingRight: '50px',
+                      border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+                      boxShadow: 'none',
+                      borderRadius: theme.radius.xl,
+                      '&::placeholder': {
+                        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[5],
+                      },
+                      '&:focus': {
+                        borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3],
+                        outline: 'none',
+                      },
+                    },
+                    dropdown: {
+                      border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
+                      marginTop: '8px',
+                      overflow: 'hidden',
+                      borderRadius: theme.radius.md,
+                      padding: '0',
+                    },
+                  })}
+                />
+                <ActionIcon
+                  sx={(theme) => ({
+                    position: 'absolute',
+                    right: '8px',
+                    top: '8px',
+                    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+                    border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                    borderRadius: '50%',
+                    '&:hover': {
+                      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[1],
+                    },
+                  })}
+                  size="md"
+                  onClick={adjustComponentWithGpt}
+                  loading={isAdjusting}
+                  disabled={!adjustmentPrompt || isAdjusting}
+                >
+                  <IconArrowRight size={16} />
+                </ActionIcon>
+              </Box>
+            </Box>
+          </Box>
+          
+          {/* Code Playground */}
+          <Box
+            sx={{
+              width: '75%',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+            }}
+          >
+            <CodePlayground 
+              code={data} 
+              title={auxPromptValue}
+              externalResources={['https://cdn.tailwindcss.com']}
+            />
+          </Box>
+        </Flex>
 
         <Container 
           size="md" 
           mt={20} 
           mb={40}
           sx={{
-            width: opened ? '28%' : '100%',
+            width: opened ? '0' : '100%',
             transition: 'all 0.3s ease',
             paddingRight: opened ? '0' : undefined,
             marginLeft: opened ? '16px' : 'auto',
             marginRight: opened ? '0' : 'auto',
+            display: opened ? 'none' : 'block',
           }}
         >
           <Transition
