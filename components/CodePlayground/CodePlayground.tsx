@@ -9,8 +9,7 @@ import {
   IconRefresh, 
   IconShare, 
   IconX,
-  IconMaximize,
-  IconBrandGithub
+  IconMaximize
 } from '@tabler/icons-react';
 import { Sandpack, SandpackProvider, SandpackCodeEditor, SandpackPreview } from '@codesandbox/sandpack-react';
 
@@ -241,11 +240,7 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({
               </ActionIcon>
             </Tooltip>
             
-            <Tooltip label="View on GitHub" position="top" withArrow>
-              <ActionIcon className={classes.actionButton}>
-                <IconBrandGithub size={18} />
-              </ActionIcon>
-            </Tooltip>
+            {/* GitHub button removed as requested */}
           </Box>
           
           <Button 
