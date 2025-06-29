@@ -109,4 +109,6 @@ const AutocompleteItem = forwardRef<HTMLDivElement, ItemProps>((
   </div>
 ));
 
+AutocompleteItem.displayName = 'AutocompleteItem';
+
 export default PromptInput;
