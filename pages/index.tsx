@@ -25,7 +25,7 @@ import {
 import { reactLogo, tailwindLogo, loadingAnimation } from '@/assets';
 import { supabase } from '@/lib/supabaseClient';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import ActionBar from '@/components/ActionBar';
+
 import CodePlayground from '@/components/CodePlayground';
 import { LOADING_TEXTS } from '@/constants';
 import { useRouter } from 'next/router';
@@ -325,37 +325,8 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             )}
           </Transition>
         </Container>
-      </Box>
 
-      <Transition
-        mounted={opened || isLoading}
-        transition="fade"
-        duration={300}
-        timingFunction="ease"
-      >
-        {(style) => (
-          <Container
-            w="100%"
-            size="lg"
-            mb="md"
-            style={style}
-            sx={{ position: 'fixed', bottom: 0, zIndex: 999 }}
-          >
-            <Flex justify="center" align="center">
-              <ActionBar
-                value={promptInputValue}
-                onChange={setPromptInputValue}
-                placeholder="Ask anything"
-                onKeyDown={getHotkeyHandler([['Enter', generateTextWithGpt]])}
-                onClick={generateTextWithGpt}
-                inputSize="md"
-                disabled={isLoading}
-                prompt={auxPromptValue}
-              />
-            </Flex>
-          </Container>
-        )}
-      </Transition>
+
     </>
   );
 };
