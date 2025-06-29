@@ -325,8 +325,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             )}
           </Transition>
         </Container>
-
-
+      </Box>
     </>
   );
 };
