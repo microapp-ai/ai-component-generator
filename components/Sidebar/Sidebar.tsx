@@ -119,54 +119,55 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
           sx={{ marginBottom: '12px' }}
         >
           {!expanded ? (
-            <Box sx={{ 
+            <Box sx={(theme) => ({ 
               width: '36px', 
               height: '36px', 
               borderRadius: '8px',
-              background: 'linear-gradient(135deg, rgba(25, 113, 194, 0.2) 0%, rgba(68, 144, 214, 0.2) 100%)',
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1) inset',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
               transition: 'all 0.2s ease'
-            }}>
+            })}>
               <IconEdit 
-                size={18} 
+                size={20} 
                 stroke={1.5} 
                 style={{ 
-                  color: '#4dabf7',
-                  filter: 'drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1))'
+                  color: '#60a5fa',
+                  filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))'
                 }} 
               />
             </Box>
           ) : (
             <Group spacing="sm">
-              <Box sx={{ 
+              <Box sx={(theme) => ({ 
                 width: '36px', 
                 height: '36px', 
                 borderRadius: '8px',
-                background: 'linear-gradient(135deg, rgba(25, 113, 194, 0.2) 0%, rgba(68, 144, 214, 0.2) 100%)',
+                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1) inset',
+                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
                 transition: 'all 0.2s ease'
-              }}>
+              })}>
                 <IconEdit 
-                  size={18} 
+                  size={20} 
                   stroke={1.5} 
                   style={{ 
-                    color: '#4dabf7',
-                    filter: 'drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1))'
+                    color: '#60a5fa',
+                    filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))'
                   }} 
                 />
               </Box>
               <Text
                 sx={{
                   fontSize: '15px',
-                  fontWeight: 500,
-                  color: '#4dabf7',
-                  letterSpacing: '0.2px'
+                  fontWeight: 600,
+                  color: '#60a5fa',
+                  letterSpacing: '0.2px',
+                  textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)'
                 }}
               >
                 New component
