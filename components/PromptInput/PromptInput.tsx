@@ -1,4 +1,4 @@
-import { FC, KeyboardEventHandler, forwardRef } from 'react';
+import { FC, KeyboardEventHandler, forwardRef, useEffect, useRef } from 'react';
 import { Autocomplete, MantineNumberSize, MantineSize, Box, Group, Text } from '@mantine/core';
 
 interface PromptInputProps {
@@ -20,10 +20,20 @@ const PromptInput: FC<PromptInputProps> = ({
   size = 'md',
   autoFocus = false,
 }) => {
+  // Create a ref to the input element
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Update the input value when the value prop changes
+  useEffect(() => {
+    if (inputRef.current && inputRef.current.value !== value) {
+      inputRef.current.value = value;
+    }
+  }, [value]);
   return (
     <Box sx={{ position: 'relative' }}>
 
       <Autocomplete
+        ref={inputRef}
         autoFocus={autoFocus}
         radius={radius}
         w="100%"

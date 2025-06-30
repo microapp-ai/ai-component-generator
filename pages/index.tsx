@@ -537,6 +537,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                         key={index} 
                         onClick={() => {
                           setPromptInputValue(example);
+                          // Force focus on the input after selecting an example
+                          const inputElement = document.querySelector('input[placeholder="Ask anything"]');
+                          if (inputElement) {
+                            (inputElement as HTMLInputElement).focus();
+                          }
                         }}
                         sx={(theme) => ({
                           padding: '12px 16px',

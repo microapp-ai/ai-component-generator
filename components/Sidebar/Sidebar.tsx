@@ -94,7 +94,11 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
       <Flex justify="space-between" align="center" mb={10}>
         <ActionIcon 
           className={classes.menuButton} 
-          onClick={onToggle}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (onToggle) onToggle();
+          }}
         >
           {expanded ? <IconX size={20} /> : <IconMenu2 size={20} />}
         </ActionIcon>
@@ -107,7 +111,11 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
         {/* New component button */}
         <Box 
           className={classes.newButton}
-          onClick={handleNewComponent}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleNewComponent();
+          }}
           sx={{ marginBottom: '12px' }}
         >
           {!expanded ? (
