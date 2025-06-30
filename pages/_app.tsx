@@ -11,6 +11,9 @@ import { LayoutProvider } from '@/providers';
 import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
 
+// Import global styles
+import '../styles/globals.css';
+
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(

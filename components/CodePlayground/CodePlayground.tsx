@@ -17,6 +17,7 @@ interface CodePlaygroundProps {
   code: string;
   title?: string;
   externalResources?: string[];
+  className?: string;
 }
 
 // Define styles directly in the component file
@@ -33,25 +34,28 @@ const useStyles = createStyles((theme) => ({
   },
   
   toolbar: {
-    backgroundColor: '#111',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : '#111',
     color: '#fff',
-    padding: '8px 16px',
+    padding: '10px 16px',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopLeftRadius: '12px',
     borderTopRightRadius: '12px',
-    height: '48px',
+    height: '52px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
   },
   
   title: {
-    fontSize: '14px',
+    fontSize: '15px',
     fontFamily: 'Inter, sans-serif',
-    fontWeight: 500,
+    fontWeight: 600,
     color: '#fff',
-    maxWidth: '300px',
+    maxWidth: '400px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    opacity: 0.9,
+    letterSpacing: '0.2px',
   },
   
   tabsContainer: {
@@ -64,15 +68,13 @@ const useStyles = createStyles((theme) => ({
   },
   
   tabButton: {
-    color: '#fff',
-    opacity: 0.7,
-    backgroundColor: 'transparent',
-    transition: 'all 0.2s ease',
-    padding: '4px 12px',
-    borderRadius: theme.radius.sm,
     fontSize: '13px',
     fontWeight: 500,
-    height: '32px',
+    color: '#fff',
+    opacity: 0.7,
+    padding: '0 12px',
+    height: '34px',
+    transition: 'all 0.2s ease',
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.1)',
       opacity: 0.9,
@@ -81,17 +83,33 @@ const useStyles = createStyles((theme) => ({
   
   activeTab: {
     opacity: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    position: 'relative',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      bottom: '-8px',
+      left: '0',
+      width: '100%',
+      height: '2px',
+      backgroundColor: theme.colors.blue[4],
+      boxShadow: '0 0 8px rgba(66, 153, 225, 0.6)',
+    },
   },
   
   actionButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     color: '#fff',
-    opacity: 0.7,
-    backgroundColor: 'transparent',
+    borderRadius: theme.radius.sm,
+    width: '34px',
+    height: '34px',
     transition: 'all 0.2s ease',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      opacity: 0.9,
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      transform: 'translateY(-1px)',
+    },
+    '&:active': {
+      transform: 'translateY(0)',
     },
   },
   
@@ -114,6 +132,8 @@ const useStyles = createStyles((theme) => ({
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : '#fff',
     overflow: 'hidden',
     display: 'flex',
+    borderBottomLeftRadius: '12px',
+    borderBottomRightRadius: '12px',
   },
   
   sandpack: {
@@ -123,14 +143,20 @@ const useStyles = createStyles((theme) => ({
       height: '100%',
       border: 'none',
       borderRadius: 0,
+      boxShadow: 'none',
     },
     '& .sp-preview-container': {
       backgroundColor: '#fff',
-      padding: '16px',
+      padding: '24px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     '& .sp-preview-iframe': {
       backgroundColor: '#fff',
-      borderRadius: 0,
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+      maxWidth: '100%',
     },
     '& .sp-layout': {
       height: '100%',
@@ -154,16 +180,12 @@ const useStyles = createStyles((theme) => ({
   
   buttonGroup: {
     display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
+    gap: '10px',
+    marginLeft: '8px',
   },
 }));
 
-const CodePlayground: React.FC<CodePlaygroundProps> = ({
-  code,
-  title = 'Empty and Blank Page',
-  externalResources = ['https://cdn.tailwindcss.com'],
-}) => {
+const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Component Preview', externalResources = [], className }) => {
   const { classes } = useStyles();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
@@ -188,7 +210,7 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({
   };
 
   return (
-    <Box className={classes.container}>
+    <Box className={`${classes.container} ${className || ''}`}>
       {/* Toolbar */}
       <Flex className={classes.toolbar}>
         <Flex align="center" gap="md">

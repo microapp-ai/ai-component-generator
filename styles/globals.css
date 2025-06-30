@@ -1,0 +1,63 @@
+/* Global styles */
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Code playground styles */
+.code-playground-fullheight {
+  height: 100% !important;
+  min-height: 500px !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Enhanced preview container */
+.sp-preview-container {
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2)) !important;
+  border-radius: 8px !important;
+}
+
+/* Add subtle animation to the preview */
+@keyframes gentle-pulse {
+  0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+  50% { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); }
+  100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+}
+
+.sp-preview-iframe {
+  animation: gentle-pulse 3s infinite ease-in-out;
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .code-playground-fullheight {
+    min-height: 400px !important;
+  }
+}

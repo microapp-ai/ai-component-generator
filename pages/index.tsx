@@ -300,19 +300,42 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           )}
         </Transition>
 
-        <Flex sx={{ display: opened ? 'flex' : 'none', height: 'calc(100vh - 120px)', position: 'fixed', top: '20px', right: '16px', left: sidebarExpanded ? '256px' : '76px', zIndex: 100, transition: 'left 0.3s ease' }}>
+        <Flex sx={(theme) => ({ 
+          display: opened ? 'flex' : 'none', 
+          height: 'calc(100vh - 80px)', 
+          position: 'fixed', 
+          top: '50%',
+          transform: 'translateY(-50%)',
+          right: '16px', 
+          left: sidebarExpanded ? '256px' : '76px', 
+          zIndex: 100, 
+          transition: 'all 0.3s ease',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 16px',
+          gap: '24px',
+          flexWrap: 'nowrap',
+          '@media (max-width: 1200px)': {
+            flexDirection: 'column',
+            padding: '0 8px',
+            gap: '16px',
+            height: 'calc(100vh - 60px)'
+          }
+        })}>
           {/* History Panel */}
           <Box
             sx={(theme) => ({
               width: '25%',
-              marginRight: '16px',
+              maxWidth: '400px',
+              marginRight: '24px',
               borderRadius: '12px',
               overflow: 'hidden',
               backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
               border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
               display: 'flex',
               flexDirection: 'column',
+              maxHeight: '90vh',
             })}
           >
             <Box
@@ -325,7 +348,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
               <Text weight={600} size="sm">Component History</Text>
             </Box>
             
-            <Box sx={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
+            <Box sx={{ flex: 1, overflowY: 'auto', padding: '12px', scrollbarWidth: 'thin' }}>
               {componentHistory.length === 0 ? (
                 <Text color="dimmed" size="sm" align="center" mt={20}>
                   No history yet. Generate a component to see history.
@@ -434,17 +457,23 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           
           {/* Code Playground */}
           <Box
-            sx={{
+            sx={(theme) => ({
               width: '75%',
+              maxWidth: '1000px',
               borderRadius: '12px',
               overflow: 'hidden',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-            }}
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
+              border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+              maxHeight: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+            })}
           >
             <CodePlayground 
               code={data} 
               title={auxPromptValue}
               externalResources={['https://cdn.tailwindcss.com']}
+              className="code-playground-fullheight"
             />
           </Box>
         </Flex>
