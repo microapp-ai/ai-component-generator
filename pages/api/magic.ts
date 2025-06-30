@@ -95,7 +95,15 @@ async function handler(req: any, res: any) {
     { role: 'user', content: text },
   ];
 
+  // Check if API key is available
+  const apiKey = process.env.OPENAI_API_KEY || process.env.NEXT_PUBLIC_CHATGPT_API_KEY;
+  if (!apiKey) {
+    console.error('OpenAI API key is missing');
+    return res.status(500).json({ error: 'API key configuration error' });
+  }
+
   try {
+    console.log('Making request to OpenAI API...');
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
@@ -106,10 +114,12 @@ async function handler(req: any, res: any) {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CHATGPT_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
         },
       }
     );
+    
+    console.log('Received response from OpenAI API');
 
     const code = response.data?.choices[0]?.message?.content || '';
     const codeWithoutBackticks = removeTripleBackticksAndJsx(code);
@@ -135,7 +145,26 @@ async function handler(req: any, res: any) {
       code_id: logId || 'temp-' + Date.now(), // Provide a fallback ID if Supabase failed
     });
   } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+    console.error('Error in OpenAI API call:', error);
+    
+    // Provide more detailed error information
+    let errorMessage = 'An unknown error occurred';
+    
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error('OpenAI API error response:', error.response.data);
+      errorMessage = error.response.data?.error?.message || 
+                    `API error: ${error.response.status} - ${error.response.statusText}`;
+    } else if (error.request) {
+      // The request was made but no response was received
+      errorMessage = 'No response received from API server';
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      errorMessage = error.message || 'Unknown error occurred';
+    }
+    
+    return res.status(500).json({ error: errorMessage });
   }
 }
 

@@ -104,9 +104,8 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       try {
         console.log('Sending request to API with prompt:', promptInputValue);
         const response = await fetch(
-          process.env.NODE_ENV === 'production'
-            ? 'https://ai-component-generator-delta.vercel.app/api/magic'
-            : '/api/magic',
+          // Use relative URL path that works in both development and production
+          '/api/magic',
           {
             method: 'POST',
             body: JSON.stringify({ text: promptInputValue, technology }),
@@ -162,9 +161,8 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
     try {
       console.log('Sending adjustment request with prompt:', adjustmentPrompt);
       const response = await fetch(
-        process.env.NODE_ENV === 'production'
-          ? 'https://ai-component-generator-delta.vercel.app/api/magic'
-          : '/api/magic',
+        // Use relative URL path that works in both environments
+        '/api/magic',
         {
           method: 'POST',
           body: JSON.stringify({ 
