@@ -548,11 +548,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                   >
                     Examples
                   </Text>
-                  <Box sx={(theme) => ({
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                    gap: '12px',
-                  })}>
+                  <Box className="examples-grid">
                     {[
                       'a responsive pricing table with 3 tiers',
                       'a dark mode toggle switch with animation',

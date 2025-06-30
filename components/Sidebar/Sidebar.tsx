@@ -1,12 +1,17 @@
 import React, { FC } from 'react';
-import { Box, createStyles, ActionIcon, Flex, Text, Group } from '@mantine/core';
+import { Box, createStyles, Text, Group } from '@mantine/core';
 import { IconMenu2, IconX, IconEdit } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+interface SidebarProps {
+  expanded: boolean;
+  onToggle?: () => void;
+}
+
 const useStyles = createStyles((theme) => ({
   sidebar: {
-    height: '100vh',
+    height: '100%',
     position: 'fixed',
     top: 0,
     left: 0,
@@ -14,181 +19,109 @@ const useStyles = createStyles((theme) => ({
     borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[7],
     transition: 'width 0.3s ease',
+    overflow: 'hidden',
+    maxHeight: '100vh',
+    maxWidth: '240px',
+  },
+  iconContainer: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '6px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.15)',
+    transition: 'all 0.2s ease',
+    cursor: 'pointer',
+    '&:hover': {
+      transform: 'translateY(-1px)',
+      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)'
+    }
+  },
+  menuIcon: {
+    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)'
+  },
+  editIcon: {
+    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)'
+  },
+  sidebarContent: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    padding: '24px 12px',
-    gap: '24px',
-  },
-  menuButton: {
-    width: '36px',
-    height: '36px',
-    borderRadius: '6px',
-    backgroundColor: 'transparent',
-    color: theme.colors.gray[4],
-    '&:hover': {
-      backgroundColor: theme.colors.dark[6],
-    },
-  },
-  navItem: {
+    gap: '6px',
+    padding: '10px 8px',
     width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '8px 12px',
-    borderRadius: '8px',
-    backgroundColor: 'transparent',
-    color: theme.colors.gray[4],
-    '&:hover': {
-      backgroundColor: theme.colors.dark[6],
-    },
-    '&[data-active=true]': {
-      backgroundColor: theme.colors.dark[5],
-      color: theme.white,
-    },
   },
-  newButton: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '8px 12px',
-    borderRadius: '8px',
-    backgroundColor: 'transparent',
-    color: theme.colors.blue[4],
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    '&:hover': {
-      backgroundColor: 'rgba(51, 154, 240, 0.05)',
-      color: theme.colors.blue[2],
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.15)',
-    },
-    '&:active': {
-      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-    },
-  },
-  // Styles for Recent items removed as requested
+  labelText: {
+    fontSize: '14px',
+    fontWeight: 600,
+    color: '#60a5fa',
+    letterSpacing: '0.1px',
+    marginLeft: '10px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  }
 }));
-
-interface SidebarProps {
-  expanded?: boolean;
-  onToggle?: () => void;
-}
 
 const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
   const { classes } = useStyles();
   const router = useRouter();
-  
+
   const handleNewComponent = () => {
-    // Navigate to home screen to create a new component
-    // We need to use router.push with a query parameter to force a refresh
-    // This will ensure the component state is reset properly
     router.push({
       pathname: '/',
-      query: { reset: Date.now() }, // Adding a timestamp to force a refresh
+      query: { reset: Date.now() },
     }, '/');
   };
 
   return (
     <Box 
       className={classes.sidebar}
-      sx={{ width: expanded ? '240px' : '60px' }}
-    >
-      {/* Menu toggle button */}
-      <Box sx={(theme) => ({
-        width: '36px',
-        height: '36px',
-        borderRadius: '6px',
-        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-        transition: 'all 0.2s ease',
-        aspectRatio: '1/1',
-        cursor: 'pointer',
-        '&:hover': {
-          transform: 'translateY(-1px)',
-          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.2)'
-        }
-      })}
-      onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (onToggle) onToggle();
+      sx={{ 
+        width: expanded ? '240px' : '60px',
+        minWidth: expanded ? '240px' : '60px',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
       }}
-      >
-        {expanded ? 
-          <IconX size={20} stroke={1.5} style={{ color: '#e0e0e0' }} /> : 
-          <IconMenu2 size={20} stroke={1.5} style={{ color: '#e0e0e0' }} />
-        }
-      </Box>
-      
-      {/* New component button */}
-      <Box 
-        className={classes.newButton}
-        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-          e.preventDefault();
-          e.stopPropagation();
-          handleNewComponent();
-        }}
-      >
-        {!expanded ? (
-          <Box sx={(theme) => ({ 
-            width: '36px', 
-            height: '36px', 
-            borderRadius: '6px',
-            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
+    >
+      <Box className={classes.sidebarContent}>
+        {/* Menu toggle button */}
+        <Box 
+          className={`${classes.iconContainer} ${classes.menuIcon}`}
+          onClick={(e: React.MouseEvent<HTMLDivElement>) => { e.preventDefault(); e.stopPropagation(); if (onToggle) onToggle(); }}
+        >
+          {expanded ? 
+            <IconX size={18} stroke={1.5} style={{ color: '#e0e0e0' }} /> : 
+            <IconMenu2 size={18} stroke={1.5} style={{ color: '#e0e0e0' }} />
+          }
+        </Box>
+
+        {/* New component button */}
+        <Box 
+          sx={{ 
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-            transition: 'all 0.2s ease',
-            aspectRatio: '1/1'
-          })}>
+            cursor: 'pointer',
+          }} 
+          onClick={(e: React.MouseEvent<HTMLDivElement>) => { e.preventDefault(); e.stopPropagation(); handleNewComponent(); }}
+        >
+          <Box className={`${classes.iconContainer} ${classes.editIcon}`}>
             <IconEdit 
-              size={20} 
+              size={18} 
               stroke={1.5} 
               style={{ 
                 color: '#60a5fa',
-                filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))'
+                filter: 'drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15))'
               }} 
             />
           </Box>
-        ) : (
-          <Group spacing="sm">
-            <Box sx={(theme) => ({ 
-              width: '36px', 
-              height: '36px', 
-              borderRadius: '6px',
-              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-              transition: 'all 0.2s ease',
-              aspectRatio: '1/1'
-            })}>
-              <IconEdit 
-                size={20} 
-                stroke={1.5} 
-                style={{ 
-                  color: '#60a5fa',
-                  filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))'
-                }} 
-              />
-            </Box>
-            <Text
-              sx={{
-                fontSize: '15px',
-                fontWeight: 600,
-                color: '#60a5fa',
-                letterSpacing: '0.2px',
-                textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)'
-              }}
-            >
+          
+          {expanded && (
+            <Text className={classes.labelText}>
               New component
             </Text>
-          </Group>
-        )}
+          )}
+        </Box>
       </Box>
     </Box>
   );
