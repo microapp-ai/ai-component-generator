@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="29px" height="31px" viewBox="0 0 29 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>React-icon (1)</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="React-icon-(1)" transform="translate(1.000000, 1.069560)">
+            <circle id="Oval" fill="#61DAFB" fill-rule="nonzero" cx="13.5" cy="14.4304399" r="2.5"></circle>
+            <g id="Group" stroke="#61DAFB">
+                <ellipse id="Oval" cx="13.5" cy="14.4304399" rx="13.5" ry="5.24286516"></ellipse>
+                <ellipse id="Oval" transform="translate(13.500000, 14.430440) rotate(60.000000) translate(-13.500000, -14.430440) " cx="13.5" cy="14.4304399" rx="13.6735398" ry="5.17761411"></ellipse>
+                <ellipse id="Oval" transform="translate(13.500000, 14.430440) rotate(120.000000) translate(-13.500000, -14.430440) " cx="13.5" cy="14.4304399" rx="13.6735398" ry="5.17761411"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>

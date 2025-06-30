@@ -264,11 +264,17 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                   fontFamily: '"Inter", sans-serif',
                 })}
               >
-                Create and preview <Image src={reactLogo} alt="react" />{' '}
+                Create and preview{' '}
+                <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle', width: '20px', height: '20px' }}>
+                  <img src="/react-logo.svg" alt="react" width={20} height={20} style={{ display: 'inline-block' }} />
+                </Box>{' '}
                 <Text span color={isDark ? '#fff' : '#202123'} weight={600}>
                   React
                 </Text>{' '}
-                + <Image src={tailwindLogo} alt="tailwind" />{' '}
+                +{' '}
+                <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle', width: '20px', height: '20px' }}>
+                  <img src="/tailwind-logo.svg" alt="tailwind" width={20} height={20} style={{ display: 'inline-block' }} />
+                </Box>{' '}
                 <Text span color={isDark ? '#fff' : '#202123'} weight={600}>
                   Tailwind CSS
                 </Text>{' '}
