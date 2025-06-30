@@ -17,7 +17,10 @@ import {
 import Image from 'next/image';
 import { getHotkeyHandler, useDisclosure } from '@mantine/hooks';
 import { IconCheck, IconCopy, IconArrowRight } from '@tabler/icons-react';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Lottie with SSR disabled to prevent 'document is not defined' errors
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import {
   LoadingTextChanger,
   PromptButton,
