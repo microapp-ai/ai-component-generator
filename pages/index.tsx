@@ -72,6 +72,24 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       open();
     }
   }, [code, open, prompt, generated_id]);
+  
+  // Handle reset from the New Component button in sidebar
+  useEffect(() => {
+    // Check if we have a reset parameter in the URL
+    if (router.query.reset) {
+      // Reset all state
+      setData('const MyComponent = () => <button>Hello!</button>; export default MyComponent;');
+      setPromptInputValue('');
+      setAuxPromptValue('');
+      setAdjustmentPrompt('');
+      setIsAdjusting(false);
+      close(); // Close the code preview
+      
+      // Remove the reset parameter from the URL without triggering a navigation
+      const { reset, ...restQuery } = router.query;
+      router.replace({ pathname: router.pathname, query: restQuery }, undefined, { shallow: true });
+    }
+  }, [router.query.reset, router, close]);
 
   const generateTextWithGpt = async () => {
     if (promptInputValue) {
@@ -206,6 +224,8 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         sx={{
           marginLeft: sidebarExpanded ? '240px' : '60px',
           transition: 'margin-left 0.3s ease',
+          paddingLeft: '16px',
+          paddingRight: '16px',
         }}
       >
         <Transition
@@ -273,7 +293,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           )}
         </Transition>
 
-        <Flex sx={{ display: opened ? 'flex' : 'none', height: 'calc(100vh - 120px)', position: 'fixed', top: '20px', right: '16px', left: '16px', zIndex: 100 }}>
+        <Flex sx={{ display: opened ? 'flex' : 'none', height: 'calc(100vh - 120px)', position: 'fixed', top: '20px', right: '16px', left: sidebarExpanded ? '256px' : '76px', zIndex: 100, transition: 'left 0.3s ease' }}>
           {/* History Panel */}
           <Box
             sx={(theme) => ({

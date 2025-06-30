@@ -1,6 +1,6 @@
-import { FC, useState } from 'react';
-import { Box, createStyles, ActionIcon, Tooltip, Flex, Transition } from '@mantine/core';
-import { IconMenu2, IconPlus, IconHome, IconHistory, IconSettings, IconX } from '@tabler/icons-react';
+import { FC } from 'react';
+import { Box, createStyles, ActionIcon, Flex, Text, Group } from '@mantine/core';
+import { IconMenu2, IconX, IconEdit } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -10,47 +10,60 @@ const useStyles = createStyles((theme) => ({
     position: 'fixed',
     top: 0,
     left: 0,
-    zIndex: 200,
+    zIndex: 100,
     borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.dark[7],
     transition: 'width 0.3s ease',
     display: 'flex',
     flexDirection: 'column',
+    padding: '12px',
   },
   menuButton: {
     width: '40px',
     height: '40px',
     borderRadius: '8px',
     backgroundColor: 'transparent',
-    color: theme.colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.gray[6],
+    color: theme.colors.gray[4],
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
+      backgroundColor: theme.colors.dark[6],
     },
   },
   navItem: {
-    width: '40px',
-    height: '40px',
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '8px 12px',
     borderRadius: '8px',
     backgroundColor: 'transparent',
-    color: theme.colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.gray[6],
+    color: theme.colors.gray[4],
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
+      backgroundColor: theme.colors.dark[6],
     },
     '&[data-active=true]': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
-      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+      backgroundColor: theme.colors.dark[5],
+      color: theme.white,
     },
   },
   newButton: {
-    width: '40px',
-    height: '40px',
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '8px 12px',
     borderRadius: '8px',
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.blue[8] : theme.colors.blue[6],
-    color: theme.white,
+    backgroundColor: 'transparent',
+    color: theme.colors.blue[4],
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.blue[7] : theme.colors.blue[5],
+      backgroundColor: 'rgba(51, 154, 240, 0.05)',
+      color: theme.colors.blue[2],
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.15)',
+    },
+    '&:active': {
+      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     },
   },
+  // Styles for Recent items removed as requested
 }));
 
 interface SidebarProps {
@@ -62,9 +75,14 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
   const { classes } = useStyles();
   const router = useRouter();
   
-  const handleNewPrompt = () => {
-    // Reset the app state and navigate to home
-    router.push('/');
+  const handleNewComponent = () => {
+    // Navigate to home screen to create a new component
+    // We need to use router.push with a query parameter to force a refresh
+    // This will ensure the component state is reset properly
+    router.push({
+      pathname: '/',
+      query: { reset: Date.now() }, // Adding a timestamp to force a refresh
+    }, '/');
   };
 
   return (
@@ -73,7 +91,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
       sx={{ width: expanded ? '240px' : '60px' }}
     >
       {/* Top section with menu toggle */}
-      <Flex p="md" justify="space-between" align="center">
+      <Flex justify="space-between" align="center" mb={10}>
         <ActionIcon 
           className={classes.menuButton} 
           onClick={onToggle}
@@ -81,66 +99,73 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
           {expanded ? <IconX size={20} /> : <IconMenu2 size={20} />}
         </ActionIcon>
         
-        <Transition mounted={expanded} transition="fade" duration={200}>
-          {(styles) => (
-            <Box style={styles} sx={{ flex: 1 }}></Box>
-          )}
-        </Transition>
+        {/* Search icon removed as requested */}
       </Flex>
 
-      {/* Navigation items */}
-      <Box sx={{ flex: 1, padding: '0 10px', marginTop: '20px' }}>
-        <Flex direction="column" gap="md" align="center">
-          <Tooltip label="New Component" position="right" disabled={expanded} withArrow>
-            <ActionIcon 
-              className={classes.newButton}
-              onClick={handleNewPrompt}
-            >
-              <IconPlus size={20} />
-            </ActionIcon>
-          </Tooltip>
-          
-          <Tooltip label="Home" position="right" disabled={expanded} withArrow>
-            <Link href="/" passHref>
-              <ActionIcon 
-                component="a"
-                className={classes.navItem}
-                data-active={router.pathname === '/'}
+      {/* Main navigation items */}
+      <Box sx={{ flex: 1 }}>
+        {/* New component button */}
+        <Box 
+          className={classes.newButton}
+          onClick={handleNewComponent}
+          sx={{ marginBottom: '12px' }}
+        >
+          {!expanded ? (
+            <Box sx={{ 
+              width: '36px', 
+              height: '36px', 
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, rgba(25, 113, 194, 0.2) 0%, rgba(68, 144, 214, 0.2) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1) inset',
+              transition: 'all 0.2s ease'
+            }}>
+              <IconEdit 
+                size={18} 
+                stroke={1.5} 
+                style={{ 
+                  color: '#4dabf7',
+                  filter: 'drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1))'
+                }} 
+              />
+            </Box>
+          ) : (
+            <Group spacing="sm">
+              <Box sx={{ 
+                width: '36px', 
+                height: '36px', 
+                borderRadius: '8px',
+                background: 'linear-gradient(135deg, rgba(25, 113, 194, 0.2) 0%, rgba(68, 144, 214, 0.2) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1) inset',
+                transition: 'all 0.2s ease'
+              }}>
+                <IconEdit 
+                  size={18} 
+                  stroke={1.5} 
+                  style={{ 
+                    color: '#4dabf7',
+                    filter: 'drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1))'
+                  }} 
+                />
+              </Box>
+              <Text
+                sx={{
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  color: '#4dabf7',
+                  letterSpacing: '0.2px'
+                }}
               >
-                <IconHome size={20} />
-              </ActionIcon>
-            </Link>
-          </Tooltip>
-          
-          <Tooltip label="History" position="right" disabled={expanded} withArrow>
-            <Link href="/history" passHref>
-              <ActionIcon 
-                component="a"
-                className={classes.navItem}
-                data-active={router.pathname === '/history'}
-              >
-                <IconHistory size={20} />
-              </ActionIcon>
-            </Link>
-          </Tooltip>
-          
-          <Tooltip label="Settings" position="right" disabled={expanded} withArrow>
-            <Link href="/settings" passHref>
-              <ActionIcon 
-                component="a"
-                className={classes.navItem}
-                data-active={router.pathname === '/settings'}
-              >
-                <IconSettings size={20} />
-              </ActionIcon>
-            </Link>
-          </Tooltip>
-        </Flex>
-      </Box>
-      
-      {/* Bottom section - can be used for user profile, etc. */}
-      <Box p="md">
-        {/* Placeholder for future content */}
+                New component
+              </Text>
+            </Group>
+          )}
+        </Box>
       </Box>
     </Box>
   );
