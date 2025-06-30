@@ -17,12 +17,13 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '20px 12px',
+    padding: '24px 12px',
+    gap: '24px',
   },
   menuButton: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '8px',
+    width: '36px',
+    height: '36px',
+    borderRadius: '6px',
     backgroundColor: 'transparent',
     color: theme.colors.gray[4],
     '&:hover': {
@@ -92,17 +93,34 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
       sx={{ width: expanded ? '240px' : '60px' }}
     >
       {/* Menu toggle button */}
-      <ActionIcon 
-        className={classes.menuButton} 
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (onToggle) onToggle();
-        }}
-        mb={20}
+      <Box sx={(theme) => ({
+        width: '36px',
+        height: '36px',
+        borderRadius: '6px',
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
+        transition: 'all 0.2s ease',
+        aspectRatio: '1/1',
+        cursor: 'pointer',
+        '&:hover': {
+          transform: 'translateY(-1px)',
+          boxShadow: '0 3px 8px rgba(0, 0, 0, 0.2)'
+        }
+      })}
+      onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (onToggle) onToggle();
+      }}
       >
-        {expanded ? <IconX size={20} /> : <IconMenu2 size={20} />}
-      </ActionIcon>
+        {expanded ? 
+          <IconX size={20} stroke={1.5} style={{ color: '#e0e0e0' }} /> : 
+          <IconMenu2 size={20} stroke={1.5} style={{ color: '#e0e0e0' }} />
+        }
+      </Box>
       
       {/* New component button */}
       <Box 
