@@ -122,13 +122,14 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
             <Box sx={(theme) => ({ 
               width: '36px', 
               height: '36px', 
-              borderRadius: '8px',
+              borderRadius: '6px',
               background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              aspectRatio: '1/1'
             })}>
               <IconEdit 
                 size={20} 
@@ -144,13 +145,14 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
               <Box sx={(theme) => ({ 
                 width: '36px', 
                 height: '36px', 
-                borderRadius: '8px',
+                borderRadius: '6px',
                 background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                aspectRatio: '1/1'
               })}>
                 <IconEdit 
                   size={20} 
