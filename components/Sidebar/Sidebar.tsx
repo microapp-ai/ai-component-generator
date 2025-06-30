@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Box, createStyles, ActionIcon, Flex, Text, Group } from '@mantine/core';
 import { IconMenu2, IconX, IconEdit } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -94,7 +94,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
       <Flex justify="space-between" align="center" mb={10}>
         <ActionIcon 
           className={classes.menuButton} 
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
             if (onToggle) onToggle();
@@ -111,7 +111,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded = false, onToggle }) => {
         {/* New component button */}
         <Box 
           className={classes.newButton}
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent<HTMLDivElement>) => {
             e.preventDefault();
             e.stopPropagation();
             handleNewComponent();

@@ -1,4 +1,4 @@
-import { FC, KeyboardEventHandler, forwardRef, useEffect, useRef } from 'react';
+import React, { FC, KeyboardEventHandler, forwardRef, useEffect, useRef } from 'react';
 import { Autocomplete, MantineNumberSize, MantineSize, Box, Group, Text } from '@mantine/core';
 
 interface PromptInputProps {

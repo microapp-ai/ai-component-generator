@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   Flex,
   Box,
@@ -538,10 +538,12 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                         onClick={() => {
                           setPromptInputValue(example);
                           // Force focus on the input after selecting an example
-                          const inputElement = document.querySelector('input[placeholder="Ask anything"]');
-                          if (inputElement) {
-                            (inputElement as HTMLInputElement).focus();
-                          }
+                          setTimeout(() => {
+                            const inputElement = document.querySelector('input[placeholder="Ask anything"]');
+                            if (inputElement) {
+                              (inputElement as HTMLInputElement).focus();
+                            }
+                          }, 0);
                         }}
                         sx={(theme) => ({
                           padding: '12px 16px',
