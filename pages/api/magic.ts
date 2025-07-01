@@ -136,7 +136,59 @@ Your task:
 
     const code = response.data?.choices[0]?.message?.content || '';
     const codeWithoutBackticks = removeTripleBackticksAndJsx(code);
-    const codeWithoutExtraText = cleanCode(codeWithoutBackticks);
+    const initialCode = cleanCode(codeWithoutBackticks);
+    
+    // Self-critique and improvement step
+    console.log('Performing self-critique and improvement...');
+    let finalCode = initialCode;
+    
+    try {
+      // Create a critique prompt based on the technology
+      const critiqueCriteria = technology === 'tailwind' ?
+        "Rewrite this component to better follow Tailwind spacing and semantic layout conventions." :
+        "Please review the following JSX component and suggest improvements in spacing, responsiveness, accessibility, or semantic structure.";
+      
+      const selfCritiqueResponse = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          messages: [
+            {
+              role: 'system',
+              content: systemMessage,
+            },
+            {
+              role: 'user',
+              content: `${critiqueCriteria}\n\n${initialCode}`,
+            },
+          ],
+          model: 'gpt-4-1106-preview',
+          temperature: 0.5, // Lower temperature for more focused improvements
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+        }
+      );
+      
+      const improvedCode = selfCritiqueResponse.data?.choices[0]?.message?.content || '';
+      const cleanImprovedCode = cleanCode(removeTripleBackticksAndJsx(improvedCode));
+      
+      // Only use the improved code if it's valid and not empty
+      if (cleanImprovedCode && cleanImprovedCode.trim().length > 0) {
+        finalCode = cleanImprovedCode;
+        console.log('Self-critique improvements applied successfully');
+      } else {
+        console.log('Self-critique did not produce valid improvements, using original code');
+      }
+    } catch (critiqueError) {
+      console.error('Error during self-critique process:', critiqueError);
+      console.log('Using original code due to critique error');
+      // Continue with the original code if the critique process fails
+    }
+    
+    const codeWithoutExtraText = finalCode;
 
     // Only update the log if we have a valid logId
     if (logId) {
@@ -145,6 +197,8 @@ Your task:
           .from('logs')
           .update({
             generated_code: codeWithoutExtraText,
+            initial_code: initialCode, // Store the initial code before self-critique
+            was_improved: initialCode !== finalCode, // Flag to indicate if improvements were made
           })
           .eq('id', logId);
       } catch (updateError) {
