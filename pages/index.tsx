@@ -228,6 +228,8 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           paddingRight: '16px',
           position: 'relative',
           zIndex: 1, // Lower z-index than sidebar
+          maxWidth: '1800px', // Limit maximum width on very large screens
+          margin: '0 auto 0 64px', // Center content on large screens while maintaining sidebar margin
         }}
       >
         <Transition
@@ -311,7 +313,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           left: sidebarExpanded ? '256px' : '76px', 
           zIndex: 100, 
           transition: 'all 0.3s ease',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
           padding: '0 16px',
           gap: '24px',
@@ -323,135 +325,95 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
             height: 'calc(100vh - 60px)'
           }
         })}>
-          {/* History Panel */}
+          {/* Left Side Column */}
           <Box
             sx={(theme) => ({
               width: '25%',
               maxWidth: '400px',
               marginRight: '24px',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-              border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
               display: 'flex',
               flexDirection: 'column',
-              maxHeight: '90vh',
+              gap: '16px',
             })}
           >
+            {/* Component History Section */}
             <Box
               sx={(theme) => ({
-                padding: '12px 16px',
-                borderBottom: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                display: 'flex',
+                flexDirection: 'column',
+                height: 'calc(90vh - 80px)', // Reduced height to make room for the prompt below
               })}
             >
-              <Text weight={600} size="sm">Component History</Text>
+              <Box sx={{ flex: 1, overflowY: 'auto', padding: '12px', scrollbarWidth: 'thin' }}>
+                {componentHistory.length === 0 ? (
+                  <Text color="dimmed" size="sm" align="center" mt={20}>
+                    No history yet. Generate a component to see history.
+                  </Text>
+                ) : (
+                  componentHistory.map((item, index) => (
+                    <Box
+                      key={index}
+                      sx={(theme) => ({
+                        padding: '12px',
+                        marginBottom: '8px',
+                        borderRadius: theme.radius.md,
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+                        },
+                      })}
+                      onClick={() => {
+                        setData(item.code);
+                        setAuxPromptValue(item.prompt);
+                      }}
+                    >
+                      <Text size="xs" color="dimmed" mb={4}>
+                        {item.timestamp.toLocaleTimeString()}
+                      </Text>
+                      <Text size="sm" lineClamp={2}>
+                        {item.prompt}
+                      </Text>
+                    </Box>
+                  )))
+                }
+              </Box>
             </Box>
             
-            <Box sx={{ flex: 1, overflowY: 'auto', padding: '12px', scrollbarWidth: 'thin' }}>
-              {componentHistory.length === 0 ? (
-                <Text color="dimmed" size="sm" align="center" mt={20}>
-                  No history yet. Generate a component to see history.
-                </Text>
-              ) : (
-                componentHistory.map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={(theme) => ({
-                      padding: '12px',
-                      marginBottom: '8px',
-                      borderRadius: theme.radius.md,
-                      border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-                      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
-                      },
-                    })}
-                    onClick={() => {
-                      setData(item.code);
-                      setAuxPromptValue(item.prompt);
-                    }}
-                  >
-                    <Text size="xs" color="dimmed" mb={4}>
-                      {item.timestamp.toLocaleTimeString()}
-                    </Text>
-                    <Text size="sm" lineClamp={2}>
-                      {item.prompt}
-                    </Text>
-                  </Box>
-                )))
-              }
-            </Box>
-            
-            {/* Adjustment Prompt Input */}
-            <Box
+            {/* Adjustment Prompt Input - Below component history */}
+            <Box 
               sx={(theme) => ({
-                padding: '12px',
-                borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                position: 'relative',
+                marginBottom: '12px', // Add space between input and code playground
+                '.mantine-Autocomplete-input': {
+                  borderRadius: theme.radius.md + ' !important',
+                }
               })}
             >
-              <Box sx={{ position: 'relative' }}>
-                <Autocomplete
-                  radius="xl"
-                  size="md"
-                  w="100%"
-                  value={adjustmentPrompt}
-                  onChange={setAdjustmentPrompt}
-                  placeholder="Adjust component..."
-                  data={[]}
-                  onKeyDown={getHotkeyHandler([['Enter', adjustComponentWithGpt]])}
-                  styles={(theme) => ({
-                    root: {
-                      position: 'relative',
-                    },
-                    input: {
-                      height: '50px',
-                      fontSize: '14px',
-                      paddingLeft: '16px',
-                      paddingRight: '50px',
-                      border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-                      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-                      boxShadow: 'none',
-                      borderRadius: theme.radius.xl,
-                      '&::placeholder': {
-                        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[5],
-                      },
-                      '&:focus': {
-                        borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3],
-                        outline: 'none',
-                      },
-                    },
-                    dropdown: {
-                      border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-                      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
-                      marginTop: '8px',
-                      overflow: 'hidden',
-                      borderRadius: theme.radius.md,
-                      padding: '0',
-                    },
-                  })}
-                />
-                <ActionIcon
-                  sx={(theme) => ({
-                    position: 'absolute',
-                    right: '8px',
-                    top: '8px',
-                    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
-                    border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-                    borderRadius: '50%',
-                    '&:hover': {
-                      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[1],
-                    },
-                  })}
-                  size="md"
+              {/* Using PromptInput with less rounded corners */}
+              <PromptInput
+                value={adjustmentPrompt}
+                onChange={setAdjustmentPrompt}
+                placeholder="Adjust component..."
+                onKeyDown={getHotkeyHandler([['Enter', adjustComponentWithGpt]])}
+                size="md"
+                radius="md" // Less rounded corners
+              />
+              
+              <Box 
+                sx={{
+                  position: 'absolute',
+                  right: '12px', 
+                  bottom: '12px',
+                }}
+              >
+                <PromptButton
                   onClick={adjustComponentWithGpt}
-                  loading={isAdjusting}
+                  isLoading={isAdjusting}
                   disabled={!adjustmentPrompt || isAdjusting}
-                >
-                  <IconArrowRight size={16} />
-                </ActionIcon>
+                  size="sm"
+                  ariaLabel="Adjust component"
+                  iconSize={16}
+                />
               </Box>
             </Box>
           </Box>
@@ -460,22 +422,29 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           <Box
             sx={(theme) => ({
               width: '75%',
-              maxWidth: '1000px',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
-              border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-              maxHeight: '90vh',
               display: 'flex',
               flexDirection: 'column',
             })}
           >
-            <CodePlayground 
-              code={data} 
-              title={auxPromptValue}
-              externalResources={['https://cdn.tailwindcss.com']}
-              className="code-playground-fullheight"
-            />
+            <Box
+              sx={(theme) => ({
+                width: '100%',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
+                border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
+                maxHeight: '90vh',
+                display: 'flex',
+                flexDirection: 'column',
+              })}
+            >
+              <CodePlayground 
+                code={data} 
+                title={auxPromptValue}
+                externalResources={['https://cdn.tailwindcss.com']}
+                className="code-playground-fullheight"
+              />
+            </Box>
           </Box>
         </Flex>
 

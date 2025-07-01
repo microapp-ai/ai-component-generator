@@ -151,13 +151,21 @@ const useStyles = createStyles((theme) => ({
       padding: '24px',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'flex-start', // Changed to align-items: flex-start for better content arrangement
+      overflow: 'auto', // Added overflow for scrolling on large content
+      '& > div': {
+        width: '100%', // Ensure the preview content takes full width
+        maxWidth: '1200px', // But limit maximum width for readability
+        margin: '0 auto', // Center the content
+      },
     },
     '& .sp-preview-iframe': {
       backgroundColor: '#fff',
       borderRadius: '8px',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-      maxWidth: '100%',
+      maxWidth: '1200px', // Set a max-width for better readability on large screens
+      margin: '0 auto', // Center the preview content
+      width: '100%', // Ensure it takes full width up to max-width
     },
     '& .sp-layout': {
       height: '100%',
@@ -306,7 +314,7 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
             >
               {!showPreview ? (
                 // Code-only view
-                <Box style={{ width: '100%', height: 'calc(100vh - 120px)' }}>
+                <Box style={{ width: '100%', height: 'calc(100vh - 120px)', maxHeight: '800px' }}>
                   <SandpackCodeEditor 
                     showTabs={false}
                     showInlineErrors={true}
@@ -317,12 +325,15 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
                 </Box>
               ) : (
                 // Split view with preview
-                <Flex style={{ width: '100%', height: '100%' }}>
+                <Flex style={{ width: '100%', height: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
                   <Box style={{ 
                     width: '50%', 
                     height: 'calc(100vh - 120px)', 
+                    maxHeight: '800px',
                     borderRight: '1px solid #eaeaea',
-                    transition: 'width 0.3s ease-in-out'
+                    transition: 'width 0.3s ease-in-out',
+                    minWidth: '400px', // Ensure code editor has minimum width on large screens
+                    flex: '1 1 400px', // Allow flex grow/shrink with minimum basis
                   }}>
                     <SandpackCodeEditor 
                       showTabs={false}
@@ -335,7 +346,10 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
                   <Box style={{ 
                     width: '50%', 
                     height: 'calc(100vh - 120px)',
-                    transition: 'width 0.3s ease-in-out'
+                    maxHeight: '800px',
+                    transition: 'width 0.3s ease-in-out',
+                    minWidth: '400px', // Ensure preview has minimum width on large screens
+                    flex: '1 1 400px', // Allow flex grow/shrink with minimum basis
                   }}>
                     <SandpackPreview 
                       showRefreshButton={true}
