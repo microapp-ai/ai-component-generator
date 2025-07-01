@@ -47,11 +47,24 @@ async function handler(req: any, res: any) {
   const library = technology === 'tailwind' ? 'Tailwind CSS' : '@mantine/core';
   const backticks = '```';
 
+  const systemMessage = `
+You are a senior frontend developer writing production-ready React components.
+
+Your task:
+- Use the selected UI library (Tailwind CSS or @mantine/core)
+- Write clean, elegant, responsive, and accessible JSX
+- Prioritize visual hierarchy, spacing, and good UX principles
+- Use semantic HTML where possible
+- Never use external CSS files or libraries not explicitly mentioned
+- Never wrap code with markdown, triple backticks, or explanations
+- For images, use: https://source.unsplash.com/random
+- Always return a single valid React functional component only
+`.trim();
+
   const messages = [
     {
       role: 'system',
-      content:
-        'Assume you are a Frontend developer and you are generating code to be used in production environment. Only generate code without any explanations. If images are used, please use random images from unsplash using the url https://source.unsplash.com/random.',
+      content: systemMessage,
     },
     {
       role: 'user',
@@ -90,7 +103,7 @@ async function handler(req: any, res: any) {
     },
     {
       role: 'user',
-      content: `Please create the code that renders the following React functional component, using the ${library} UI library, return code only and DO NOT wrap the code with ${backticks}, ${backticks}jsx, triple backtick, triple backquote or any other string character. DO NOT use any external library other than the one that was provided. Return code only without any instructions or text, avoid using any theme from Mantine. Always return a React functional component and do not import any external style css file`,
+      content: `Please write a visually elegant, responsive, and accessible React functional component using ${library}. Follow modern design practices: use semantic HTML, Tailwind utility classes for spacing and layout, and clean component structure. Do not wrap output in any markdown syntax. No text or comments—only the JSX component. Do not use any external CSS file or library.`,
     },
     { role: 'user', content: text },
   ];
