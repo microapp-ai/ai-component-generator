@@ -79,6 +79,7 @@ const useStyles = createStyles((theme) => ({
       backgroundColor: 'rgba(255, 255, 255, 0.1)',
       opacity: 0.9,
     },
+
   },
   
   activeTab: {
@@ -178,6 +179,15 @@ const useStyles = createStyles((theme) => ({
     padding: '16px',
   },
   
+  placeholder: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
+    fontSize: '14px',
+  },
+  
   buttonGroup: {
     display: 'flex',
     gap: '10px',
@@ -190,7 +200,12 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
   
-  const [activeTab, setActiveTab] = useState<'code' | 'preview' | 'split'>('split');
+  // Replace the three-state tab with a simple boolean toggle
+  const [showPreview, setShowPreview] = useState(true);
+  
+  // Calculate editor and preview widths based on the toggle state
+  const editorWidth: number = showPreview ? 50 : 100;
+  const previewWidth: number = showPreview ? 50 : 0;
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -221,8 +236,8 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
           <Box className={classes.tabsContainer}>
             <Button 
               variant="subtle"
-              className={`${classes.tabButton} ${activeTab === 'code' ? classes.activeTab : ''}`}
-              onClick={() => setActiveTab('code')}
+              className={`${classes.tabButton} ${!showPreview ? classes.activeTab : ''}`}
+              onClick={() => setShowPreview(false)}
               leftIcon={<IconCode size={16} />}
               compact
             >
@@ -231,17 +246,8 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
             
             <Button 
               variant="subtle"
-              className={`${classes.tabButton} ${activeTab === 'split' ? classes.activeTab : ''}`}
-              onClick={() => setActiveTab('split')}
-              compact
-            >
-              Split
-            </Button>
-            
-            <Button 
-              variant="subtle"
-              className={`${classes.tabButton} ${activeTab === 'preview' ? classes.activeTab : ''}`}
-              onClick={() => setActiveTab('preview')}
+              className={`${classes.tabButton} ${showPreview ? classes.activeTab : ''}`}
+              onClick={() => setShowPreview(true)}
               leftIcon={<IconDeviceLaptop size={16} />}
               compact
             >
@@ -298,27 +304,26 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
                 recompileDelay: 500,
               }}
             >
-              {activeTab === 'code' && (
-                <SandpackCodeEditor 
-                  showTabs={false}
-                  showInlineErrors={true}
-                  showLineNumbers={true}
-                  style={{ height: 'calc(100vh - 120px)', width: '100%', fontSize: '14px', maxWidth: '100%' }}
-                  closableTabs={false}
-                />
-              )}
-              
-              {activeTab === 'preview' && (
-                <SandpackPreview 
-                  showRefreshButton={true}
-                  showOpenInCodeSandbox={false}
-                  style={{ height: 'calc(100vh - 120px)', width: '100%', background: '#fff', padding: '16px', maxWidth: '100%' }}
-                />
-              )}
-              
-              {activeTab === 'split' && (
+              {!showPreview ? (
+                // Code-only view
+                <Box style={{ width: '100%', height: 'calc(100vh - 120px)' }}>
+                  <SandpackCodeEditor 
+                    showTabs={false}
+                    showInlineErrors={true}
+                    showLineNumbers={true}
+                    closableTabs={false}
+                    style={{ height: '100%', fontSize: '14px', maxWidth: '100%' }}
+                  />
+                </Box>
+              ) : (
+                // Split view with preview
                 <Flex style={{ width: '100%', height: '100%' }}>
-                  <Box style={{ width: '45%', height: 'calc(100vh - 120px)', borderRight: '1px solid #eaeaea' }}>
+                  <Box style={{ 
+                    width: '50%', 
+                    height: 'calc(100vh - 120px)', 
+                    borderRight: '1px solid #eaeaea',
+                    transition: 'width 0.3s ease-in-out'
+                  }}>
                     <SandpackCodeEditor 
                       showTabs={false}
                       showInlineErrors={true}
@@ -327,7 +332,11 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
                       style={{ height: '100%', fontSize: '14px', maxWidth: '100%' }}
                     />
                   </Box>
-                  <Box style={{ width: '55%', height: 'calc(100vh - 120px)' }}>
+                  <Box style={{ 
+                    width: '50%', 
+                    height: 'calc(100vh - 120px)',
+                    transition: 'width 0.3s ease-in-out'
+                  }}>
                     <SandpackPreview 
                       showRefreshButton={true}
                       showOpenInCodeSandbox={false}
@@ -339,8 +348,8 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
             </SandpackProvider>
           </Box>
         ) : (
-          <Box className={classes.errorBox}>
-            Unable to render code preview. Please check your input or try again.
+          <Box className={classes.placeholder}>
+            <Text>Enter component code to preview</Text>
           </Box>
         )}
       </Box>

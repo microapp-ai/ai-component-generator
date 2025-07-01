@@ -223,10 +223,11 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
         w="100%" 
         h="100%"
         sx={{
-          marginLeft: sidebarExpanded ? '240px' : '60px',
-          transition: 'margin-left 0.3s ease',
+          marginLeft: '64px', // Fixed margin for the collapsed sidebar width
           paddingLeft: '16px',
           paddingRight: '16px',
+          position: 'relative',
+          zIndex: 1, // Lower z-index than sidebar
         }}
       >
         <Transition
