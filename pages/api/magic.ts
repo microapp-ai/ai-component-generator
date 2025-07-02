@@ -13,6 +13,33 @@ import {
 } from '@/constants';
 import { cleanCode, removeTripleBackticksAndJsx } from '@/utils';
 
+// Function to check for disallowed dependencies in the code
+function checkForDisallowedDependencies(code: string, technology: string): { isValid: boolean; cleanedCode: string } {
+  // List of disallowed dependencies
+  const disallowedDependencies = [
+    'react-icons',
+    'heroicons',
+    '@heroicons',
+    'font-awesome',
+    '@fortawesome',
+  ];
+  
+  // If using Mantine, react-icons should be replaced with @tabler/icons-react
+  if (technology === 'mantine' && code.includes('react-icons')) {
+    // Try to fix the code by replacing react-icons imports with @tabler/icons-react
+    const cleanedCode = code.replace(
+      /import\s+\{\s*([^}]*)\s*\}\s+from\s+['"]react-icons\/[^'"]+['"]/g,
+      'import { $1 } from "@tabler/icons-react"'
+    );
+    return { isValid: false, cleanedCode };
+  }
+  
+  // Check if any disallowed dependencies are used
+  const hasDisallowedDependency = disallowedDependencies.some(dep => code.includes(dep));
+  
+  return { isValid: !hasDisallowedDependency, cleanedCode: code };
+}
+
 async function handler(req: any, res: any) {
   const { text, technology } = req.body;
 
@@ -59,6 +86,9 @@ Your task:
 - Never wrap code with markdown, triple backticks, or explanations
 - For images, use: https://source.unsplash.com/random
 - Always return a single valid React functional component only
+- IMPORTANT: Do not use any external libraries like react-icons, heroicons, etc. Use only standard HTML/SVG for icons or the icons provided by the specified UI library
+- For Mantine, only use icons from @tabler/icons-react if needed
+- For Tailwind, use simple SVG elements for icons if needed
 `.trim();
 
   const messages = [
@@ -103,7 +133,11 @@ Your task:
     },
     {
       role: 'user',
-      content: `Please write a visually elegant, responsive, and accessible React functional component using ${library}. Follow modern design practices: use semantic HTML, Tailwind utility classes for spacing and layout, and clean component structure. Do not wrap output in any markdown syntax. No text or comments—only the JSX component. Do not use any external CSS file or library.`,
+      content: `Please write a visually elegant, responsive, and accessible React functional component using ${library}. Follow modern design practices: use semantic HTML, ${technology === 'tailwind' ? 'Tailwind utility classes' : 'Mantine components'} for spacing and layout, and clean component structure. 
+
+For icons, ${technology === 'tailwind' ? 'use simple SVG elements' : 'only use @tabler/icons-react'}. Do not use react-icons, heroicons, or any other icon libraries.
+
+Do not wrap output in any markdown syntax. No text or comments—only the JSX component. Do not use any external CSS file or library.`,
     },
     { role: 'user', content: text },
   ];
@@ -138,15 +172,24 @@ Your task:
     const codeWithoutBackticks = removeTripleBackticksAndJsx(code);
     const initialCode = cleanCode(codeWithoutBackticks);
     
+    // Check for disallowed dependencies in the initial code
+    const initialValidation = checkForDisallowedDependencies(initialCode, technology);
+    let validatedInitialCode = initialCode;
+    
+    if (!initialValidation.isValid) {
+      console.log('Found disallowed dependencies in initial code, attempting to fix...');
+      validatedInitialCode = initialValidation.cleanedCode;
+    }
+    
     // Self-critique and improvement step
     console.log('Performing self-critique and improvement...');
-    let finalCode = initialCode;
+    let finalCode = validatedInitialCode;
     
     try {
       // Create a critique prompt based on the technology
       const critiqueCriteria = technology === 'tailwind' ?
-        "Rewrite this component to better follow Tailwind spacing and semantic layout conventions." :
-        "Please review the following JSX component and suggest improvements in spacing, responsiveness, accessibility, or semantic structure.";
+        "Rewrite this component to better follow Tailwind spacing and semantic layout conventions. Ensure it doesn't use any external libraries like react-icons or heroicons. Use simple SVG elements for icons if needed." :
+        "Please review the following JSX component and suggest improvements in spacing, responsiveness, accessibility, or semantic structure. Ensure it only uses @tabler/icons-react for icons and no other icon libraries.";
       
       const selfCritiqueResponse = await axios.post(
         'https://api.openai.com/v1/chat/completions',
@@ -207,9 +250,19 @@ Your task:
       }
     }
 
+    // Final validation before sending to client
+    const finalValidation = checkForDisallowedDependencies(codeWithoutExtraText, technology);
+    const validatedFinalCode = finalValidation.isValid ? codeWithoutExtraText : finalValidation.cleanedCode;
+    
+    // If we had to fix issues in the final validation, log it
+    if (!finalValidation.isValid) {
+      console.log('Fixed dependency issues in the final code');
+    }
+    
     return res.status(200).json({
-      response: codeWithoutExtraText,
+      response: validatedFinalCode,
       code_id: logId || 'temp-' + Date.now(), // Provide a fallback ID if Supabase failed
+      had_dependency_issues: !initialValidation.isValid || !finalValidation.isValid
     });
   } catch (error: any) {
     console.error('Error in OpenAI API call:', error);

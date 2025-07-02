@@ -302,6 +302,10 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
               customSetup={{
                 dependencies: {
                   'date-fns': '2.29.3',
+                  '@tabler/icons-react': '2.30.0',
+                  '@mantine/core': '6.0.0',
+                  '@mantine/hooks': '6.0.0',
+                  'react-icons': '4.10.1',
                 },
               }}
               options={{
