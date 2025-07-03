@@ -99,7 +99,12 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       setIsLoading(true);
       setAuxPromptValue(promptInputValue);
       setCodeWasShown(false);
-      close();
+      
+      // Immediately open the preview with a loading state
+      // Use a special marker that will be detected by the CodePlayground component
+      setData('// Generating your component...');
+      console.log('Setting loading state with code:', '// Generating your component...');
+      open();
 
       try {
         console.log('Sending request to API with prompt:', promptInputValue);
@@ -140,7 +145,6 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           ]);
         }
 
-        setTimeout(() => open(), 500);
         setCodeWasShown(true);
         setPromptInputValue('');
         setIsLoading(false);
@@ -285,23 +289,7 @@ const Home: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           )}
         </Transition>
 
-        <Transition
-          mounted={isLoading}
-          transition="fade"
-          duration={400}
-          timingFunction="ease"
-        >
-          {(style) => (
-            <Flex style={style} justify="center" align="center" gap="lg">
-              <Lottie
-                style={{ width: 290, marginTop: 60 }}
-                animationData={loadingAnimation}
-                loop
-              />
-              <LoadingTextChanger texts={LOADING_TEXTS} />
-            </Flex>
-          )}
-        </Transition>
+        {/* Loading animation removed - now handled in the CodePlayground component */}
 
         <Flex sx={(theme) => ({ 
           display: opened ? 'flex' : 'none', 

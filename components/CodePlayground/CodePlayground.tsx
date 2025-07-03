@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Flex, ActionIcon, Text, Tooltip, useMantineColorScheme, createStyles, Button } from '@mantine/core';
+import React, { useState, useEffect, useRef } from 'react';
+import { Box, Flex, ActionIcon, Text, Tooltip, useMantineColorScheme, createStyles, Button, Loader, keyframes } from '@mantine/core';
 import { 
   IconCode, 
   IconDeviceLaptop, 
@@ -9,9 +9,12 @@ import {
   IconRefresh, 
   IconShare, 
   IconX,
-  IconMaximize
+  IconMaximize,
+  IconBraces,
+  IconCode as IconCodeAlt
 } from '@tabler/icons-react';
 import { Sandpack, SandpackProvider, SandpackCodeEditor, SandpackPreview } from '@codesandbox/sandpack-react';
+import { LoadingTextChanger } from '@/components';
 
 interface CodePlaygroundProps {
   code: string;
@@ -19,6 +22,64 @@ interface CodePlaygroundProps {
   externalResources?: string[];
   className?: string;
 }
+
+// Define animations for loading indicator and log entries
+const dotsAnimation = keyframes({
+  '20%': { backgroundPosition: '0% 0%, 50% 50%, 100% 50%' },
+  '40%': { backgroundPosition: '0% 100%, 50% 0%, 100% 50%' },
+  '60%': { backgroundPosition: '0% 50%, 50% 100%, 100% 0%' },
+  '80%': { backgroundPosition: '0% 50%, 50% 50%, 100% 100%' },
+});
+
+const fadeInAnimation = keyframes({
+  '0%': { opacity: 0, transform: 'translateY(5px)' },
+  '100%': { opacity: 1, transform: 'translateY(0)' },
+});
+
+const fadeOutAnimation = keyframes({
+  '0%': { opacity: 1, transform: 'translateY(0)' },
+  '100%': { opacity: 0, transform: 'translateY(-5px)' },
+});
+
+const typeAnimation = keyframes({
+  '0%': { width: '0%' },
+  '100%': { width: '100%' },
+});
+
+// Sample code snippets to display during loading
+const codeSnippets = [
+  '> Initializing component generator...',
+  '> Analyzing requirements...',
+  '> import React, { useState, useEffect } from "react";',
+  '> import { Box, Text, Button } from "@mantine/core";',
+  '> ',
+  '> // Creating component structure',
+  '> const Component = () => {',
+  '> const [isLoading, setIsLoading] = useState(false);',
+  '> const [data, setData] = useState(null);',
+  '> ',
+  '> // Setting up side effects',
+  '> useEffect(() => {',
+  '> // Initialize component',
+  '> }, []);',
+  '> ',
+  '> // Adding event handlers',
+  '> const handleClick = () => {',
+  '> console.log("Button clicked");',
+  '> };',
+  '> ',
+  '> // Building component UI',
+  '> return (',
+  '> <div className="container">',
+  '> <h2>Your component is being created...</h2>',
+  '> </div>',
+  '> );',
+  '> };',
+  '> ',
+  '> export default Component;',
+  '> ',
+  '> // Finalizing component...',
+];
 
 // Define styles directly in the component file
 const useStyles = createStyles((theme) => ({
@@ -205,6 +266,59 @@ const useStyles = createStyles((theme) => ({
     gap: '10px',
     marginLeft: '8px',
   },
+
+  loadingContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
+    position: 'relative',
+    overflow: 'hidden',
+    background: theme.colorScheme === 'dark' 
+      ? '#1A1B1E' 
+      : '#f8f9fa',
+  },
+
+  loadingIndicator: {
+    width: '60px',
+    aspectRatio: '2',
+    background: `no-repeat radial-gradient(circle closest-side, ${theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.dark[9]} 90%, transparent) 0% 50%, 
+                no-repeat radial-gradient(circle closest-side, ${theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.dark[9]} 90%, transparent) 50% 50%, 
+                no-repeat radial-gradient(circle closest-side, ${theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.dark[9]} 90%, transparent) 100% 50%`,
+    backgroundSize: 'calc(100%/3) 50%',
+    animation: `${dotsAnimation} 1s infinite linear`,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 1000,
+  },
+  
+  logEntry: {
+    margin: '4px 0',
+    opacity: 0,
+    animation: `${fadeInAnimation} 0.3s forwards`,
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+  },
+  
+  logDot: {
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.green[4] : theme.colors.green[6],
+    marginRight: '8px',
+    flexShrink: 0,
+  },
+  
+  logText: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 }));
 
 const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Component Preview', externalResources = [], className }) => {
@@ -215,6 +329,81 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
   // Toggle between code-only and preview-only views
   const [showPreview, setShowPreview] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  
+  // State for managing code snippets display
+  const [visibleSnippets, setVisibleSnippets] = useState<string[]>([]);
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const snippetContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Check if the code is in a loading state
+  useEffect(() => {
+    // Check for loading state
+    const isLoading = code === '// Generating your component...' || 
+                      code.includes('Generating your component');
+    setIsGenerating(isLoading);
+    
+    // Reset snippets when loading starts
+    if (isLoading) {
+      setVisibleSnippets([]);
+    }
+  }, [code]);
+  
+  // Blinking cursor effect
+  useEffect(() => {
+    let cursorInterval: NodeJS.Timeout;
+    
+    if (isGenerating) {
+      cursorInterval = setInterval(() => {
+        setCursorVisible(prev => !prev);
+      }, 500);
+    }
+    
+    return () => {
+      if (cursorInterval) clearInterval(cursorInterval);
+    };
+  }, [isGenerating]);
+  
+  // Auto-scroll effect
+  useEffect(() => {
+    if (snippetContainerRef.current && Array.isArray(visibleSnippets) && visibleSnippets.length > 0) {
+      const container = snippetContainerRef.current;
+      container.scrollTop = container.scrollHeight;
+      
+      // Remove oldest items if we have too many
+      if (visibleSnippets.length > 15) {
+        setTimeout(() => {
+          setVisibleSnippets(prev => Array.isArray(prev) && prev.length > 0 ? prev.slice(1) : []);
+        }, 300);
+      }
+    }
+  }, [visibleSnippets]);
+  
+  // Add code snippets one by one during loading
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (isGenerating) {
+      let currentIndex = 0;
+      
+      interval = setInterval(() => {
+        if (Array.isArray(codeSnippets) && currentIndex < codeSnippets.length) {
+          const snippet = codeSnippets[currentIndex];
+          if (snippet && typeof snippet === 'string') {
+            setVisibleSnippets(prev => Array.isArray(prev) ? [...prev, snippet] : [snippet]);
+          }
+          currentIndex++;
+        } else {
+          // Once we've shown all snippets, start over
+          currentIndex = 0;
+        }
+      }, 600);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isGenerating]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(code);
@@ -291,7 +480,97 @@ const CodePlayground: React.FC<CodePlaygroundProps> = ({ code, title = 'Componen
 
       {/* Content */}
       <Box className={classes.content}>
-        {code && typeof code === 'string' && code.trim() !== '' ? (
+        {isGenerating ? (
+          <Box
+            sx={{
+              width: '100%',
+              height: 'calc(100vh - 120px)',
+              maxHeight: '800px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: colorScheme === 'dark' ? '#1A1B1E' : '#f8f9fa',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1000,
+            }}>
+              {/* Animated dots */}
+              <div style={{
+                width: '60px',
+                aspectRatio: '2',
+                background: `no-repeat radial-gradient(circle closest-side, ${colorScheme === 'dark' ? '#333' : '#000'} 90%, #0000) 0% 50%, 
+                            no-repeat radial-gradient(circle closest-side, ${colorScheme === 'dark' ? '#333' : '#000'} 90%, #0000) 50% 50%, 
+                            no-repeat radial-gradient(circle closest-side, ${colorScheme === 'dark' ? '#333' : '#000'} 90%, #0000) 100% 50%`,
+                backgroundSize: 'calc(100%/3) 50%',
+                animation: `${dotsAnimation} 1s infinite linear`,
+                marginBottom: '30px',
+              }} />
+              
+              {/* Code snippets log */}
+              <div 
+                ref={snippetContainerRef}
+                style={{
+                  fontFamily: 'monospace',
+                  fontSize: '12px',
+                  color: colorScheme === 'dark' ? '#555' : '#aaa',
+                  width: '320px',
+                  height: '150px',
+                  textAlign: 'left',
+                  padding: '10px',
+                  borderRadius: '4px',
+                  backgroundColor: colorScheme === 'dark' ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.02)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                }}>
+                <div style={{ overflow: 'hidden', height: '100%' }}>
+                  {Array.isArray(visibleSnippets) && visibleSnippets.map((snippet, index) => {
+                    const isOldest = index === 0 && visibleSnippets.length > 15;
+                    return (
+                      <div 
+                        key={index}
+                        style={{
+                          animation: isOldest ? 
+                            `${fadeOutAnimation} 0.3s forwards` : 
+                            `${fadeInAnimation} 0.3s forwards`,
+                          whiteSpace: 'pre',
+                          lineHeight: '1.4',
+                          color: snippet && typeof snippet === 'string' && snippet.startsWith('> //') ? 
+                            (colorScheme === 'dark' ? '#5a7749' : '#007000') : 
+                            (colorScheme === 'dark' ? '#666' : '#999')
+                        }}
+                      >
+                        {snippet}
+                      </div>
+                    );
+                  })}
+                </div>
+                {cursorVisible && isGenerating && (
+                  <span 
+                    style={{
+                      display: 'inline-block',
+                      width: '5px',
+                      height: '12px',
+                      backgroundColor: colorScheme === 'dark' ? '#555' : '#aaa',
+                      marginLeft: '2px',
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          </Box>
+        ) : code && typeof code === 'string' && code.trim() !== '' ? (
           <Box className={classes.sandpack}>
             <SandpackProvider
               template="react"
